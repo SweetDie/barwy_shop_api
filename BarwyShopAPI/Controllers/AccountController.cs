@@ -36,7 +36,7 @@ namespace BarwyShopAPI.Controllers
             return Ok(new { token });
         }
 
-        [HttpPost("GoogleExternalLogin")]
+        [HttpPost("googleExternalLogin")]
         public async Task<IActionResult> GoogleExternalLoginAsync([FromBody] ExternalLoginRequest request)
         {
             try

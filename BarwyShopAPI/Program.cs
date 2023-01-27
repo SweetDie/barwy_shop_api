@@ -1,7 +1,10 @@
+using BarwyShopAPI;
 using BarwyShopAPI.Services;
 using BarwyShopAPI.Settings;
 using DAL;
 using DAL.Entities.Identity;
+using DAL.Repositories.Classes;
+using DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -30,6 +33,9 @@ builder.Services.AddSingleton(googleAuthSettings);
 
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -57,7 +63,7 @@ app.UseCors();
 app.UseAuthorization();
 
 var dir = Path.Combine(Directory.GetCurrentDirectory(), "images");
-if(!Directory.Exists(dir))
+if (!Directory.Exists(dir))
 {
     Directory.CreateDirectory(dir);
 }
@@ -69,5 +75,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.MapControllers();
+
+app.SeedData();
 
 app.Run();

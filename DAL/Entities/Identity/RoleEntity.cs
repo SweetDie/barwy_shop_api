@@ -2,7 +2,7 @@
 
 namespace DAL.Entities.Identity
 {
-    public class RoleEntity : IdentityRole<int>
+    public class RoleEntity : IdentityRole
     {
         public virtual ICollection<UserRoleEntity> UserRoles { get; set; }
     }

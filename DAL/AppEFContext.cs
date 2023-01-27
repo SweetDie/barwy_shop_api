@@ -1,4 +1,5 @@
 ﻿using DAL.Entities.Identity;
+using DAL.Entities.Products;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -7,12 +8,15 @@ using System.Reflection.Emit;
 namespace DAL
 {
     public class AppEFContext : IdentityDbContext<UserEntity, RoleEntity,
-        int, IdentityUserClaim<int>, UserRoleEntity, IdentityUserLogin<int>,
-        IdentityRoleClaim<int>, IdentityUserToken<int>>
+        string, IdentityUserClaim<string>, UserRoleEntity, IdentityUserLogin<string>,
+        IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         public AppEFContext(DbContextOptions<AppEFContext> options) : base(options)
         {
         }
+
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

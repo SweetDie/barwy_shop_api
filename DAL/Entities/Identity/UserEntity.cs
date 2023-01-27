@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Entities.Identity
 {
-    public class UserEntity : IdentityUser<int>
+    public class UserEntity : IdentityUser
     {
         [StringLength(255)]
         public string FirstName { get; set; }
