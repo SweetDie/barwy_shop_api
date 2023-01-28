@@ -1,5 +1,6 @@
 ﻿using DAL.Entities;
 using DAL.Entities.Identity;
+using DAL.Repositories.Classes;
 using DAL.Repositories.Interfaces;
 using Infrastructure.Constants;
 using Microsoft.AspNetCore.Identity;
@@ -40,8 +41,8 @@ namespace BarwyShopAPI
                         FirstName = "Admin",
                         LastName = "Admin"
                     };
-                    var result = userManager.CreateAsync(admin, "123456").Result;
-                    result = userManager.AddToRoleAsync(admin, Roles.Admin).Result;
+                    var result = await userManager.CreateAsync(admin, "123456");
+                    result = await userManager.AddToRoleAsync(admin, Roles.Admin);
 
                     string userEmail = "user@gmail.com";
                     var user = new UserEntity
@@ -52,8 +53,8 @@ namespace BarwyShopAPI
                         LastName = "User"
                     };
 
-                    result = userManager.CreateAsync(user, "123456").Result;
-                    result = userManager.AddToRoleAsync(user, Roles.User).Result;
+                    result = await userManager.CreateAsync(user, "123456");
+                    result = await userManager.AddToRoleAsync(user, Roles.User);
                 }
 
 
@@ -62,54 +63,37 @@ namespace BarwyShopAPI
                 if (!categoryRepository.Categories.Any() && !productRepository.Products.Any())
                 {
 
-                    Category[] categories =
+                    await categoryRepository.CreateCategoryAsync(new Category
                     {
-                        new Category
-                        {
-                            DateCreated = DateTime.Now.ToUniversalTime(),
-                            Name = "Патріотичні"
-                        },
-                        new Category
-                        {
-                            DateCreated = DateTime.Now.ToUniversalTime(),
-                            Name = "Пейзажі"
-                        }
+                        Name = "Патріотичні"
+                    });
+
+                    await categoryRepository.CreateCategoryAsync(new Category
+                    {
+                        Name = "Пейзажі"
+                    });
+
+                    var product = new Product
+                    {
+                        Name = "Тризуб",
+                        DateCreated = DateTime.Now.ToUniversalTime(),
+                        Price = 245,
+                        Size = "40x50",
+                        Article = "0070P1"
                     };
+                    await productRepository.CreateAsync(product);
+                    await productRepository.AddToCategoryAsync(product, "Патріотичні");
 
-                    Product[] products =
+                    product = new Product
                     {
-                        new Product
-                        {
-                            Name = "Тризуб",
-                            DateCreated= DateTime.Now.ToUniversalTime(),
-                            Price = 245,
-                            Size = "40x50",
-                            Article = "0070П1",
-                            Categories = new List<Category>()
-                            {
-                                categories[0]
-                            }
-                        },
-                        new Product
-                        {
-                            Name = "Все буде Україна",
-                            DateCreated= DateTime.Now.ToUniversalTime(),
-                            Price = 245,
-                            Size = "40x50",
-                            Article = "0049Т1",
-                            Categories = new List<Category>()
-                            {
-                                categories[0]
-                            }
-                        }
+                        Name = "Все буде Україна",
+                        DateCreated = DateTime.Now.ToUniversalTime(),
+                        Price = 245,
+                        Size = "40x50",
+                        Article = "0049T1"
                     };
-
-                    categories[0].Products = products;
-
-                    foreach (var item in categories)
-                    {
-                        await categoryRepository.CreateAsync(item);
-                    }
+                    await productRepository.CreateAsync(product);
+                    //await productRepository.AddToCategoryAsync(product, "Патріотичні");
                 }
             }
         }

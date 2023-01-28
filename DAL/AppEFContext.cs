@@ -3,6 +3,7 @@ using DAL.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Reflection.Emit;
 
 namespace DAL
@@ -17,6 +18,7 @@ namespace DAL
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet <CategoryProduct> CategoryProduct { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -36,6 +38,18 @@ namespace DAL
                     .HasForeignKey(r => r.UserId)
                     .IsRequired();
             });
+
+            builder.Entity<CategoryProduct>()
+                .HasKey(cp => new { cp.CategoryId, cp.ProductId });
+            builder.Entity<CategoryProduct>()
+                .HasOne(cp => cp.Category)
+                .WithMany(c => c.CategoryProduct)
+                .HasForeignKey(cp => cp.ProductId);
+            builder.Entity<CategoryProduct>()
+                .HasOne(cp => cp.Product)
+                .WithMany(c => c.CategoryProduct)
+                .HasForeignKey(cp => cp.CategoryId);
+
         }
     }
 }

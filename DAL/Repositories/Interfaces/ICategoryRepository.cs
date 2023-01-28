@@ -6,5 +6,6 @@ namespace DAL.Repositories.Interfaces
     {
         IQueryable<Category> Categories { get; }
         Task<Category> GetByNameAsync(string name);
+        Task CreateCategoryAsync(Category category);
     }
 }

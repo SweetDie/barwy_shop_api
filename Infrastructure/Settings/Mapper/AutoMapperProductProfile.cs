@@ -10,7 +10,7 @@ namespace Infrastructure.Settings.Mapper
         {
             CreateMap<Product, ProductVM>();
             CreateMap<ProductVM, Product>();
-            CreateMap<ProductCreateVM, Product>().ForMember(p => p.Categories, c => c.Ignore());
+            CreateMap<ProductCreateVM, Product>().ForMember(p => p.CategoryProduct, c => c.Ignore());
         }
     }
 }

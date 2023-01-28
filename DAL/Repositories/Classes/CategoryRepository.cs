@@ -7,11 +7,21 @@ namespace DAL.Repositories.Classes
     public class CategoryRepository : GenericRepository<Category, Guid>,
         ICategoryRepository
     {
+        private readonly AppEFContext _dbContext;
+
         public CategoryRepository(AppEFContext dbContext) : base(dbContext)
         {
+            _dbContext = dbContext;
         }
 
-        public IQueryable<Category> Categories => GetAll().Where(c => c.IsDelete == false).Include(c => c.Products);
+        public IQueryable<Category> Categories => GetAll().Where(c => c.IsDelete == false).Include(c => c.CategoryProduct);
+
+        public async Task CreateCategoryAsync(Category category)
+        {
+            category.NormalizedName = category.Name.ToUpper();
+            category.DateCreated = DateTime.Now.ToUniversalTime();
+            await CreateAsync(category);
+        }
 
         public async Task<Category> GetByNameAsync(string name)
         {

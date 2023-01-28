@@ -43,12 +43,13 @@ namespace Infrastructure.Services.Classes
             var newProduct = _mapper.Map<Product>(model);
             newProduct.DateCreated = DateTime.Now.ToUniversalTime();
             var categories = new List<Category>();
+
             foreach (var item in model.Categories)
             {
                 var category = await _categoryRepository.GetByNameAsync(item);
                 categories.Add(category);
             }
-            newProduct.Categories = categories;
+            //newProduct.Categories = categories;
 
             await _productRepository.CreateAsync(newProduct);
 

@@ -5,11 +5,6 @@ namespace DAL.Entities
 {
     public class Product : BaseEntity<Guid>
     {
-        public Product()
-        {
-            Categories = new List<Category>();
-        }
-
         [Required, StringLength(255)]
         public string Name { get; set; }
         [StringLength(255)]
@@ -20,6 +15,6 @@ namespace DAL.Entities
         [StringLength(20)]
         public string Size { get; set; }
 
-        public virtual IEnumerable<Category> Categories { get; set; }
+        public virtual ICollection<CategoryProduct> CategoryProduct { get; set; }
     }
 }
