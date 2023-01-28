@@ -1,6 +1,4 @@
-﻿using BarwyShopAPI.Models;
-using DAL.Repositories.Interfaces;
-using Microsoft.AspNetCore.Identity;
+﻿using DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarwyShopAPI.Controllers

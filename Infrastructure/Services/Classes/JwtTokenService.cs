@@ -1,25 +1,23 @@
-﻿using BarwyShopAPI.Models;
-using BarwyShopAPI.Settings;
-using DAL.Entities.Identity;
+﻿using DAL.Entities.Identity;
 using Google.Apis.Auth;
+using Infrastructure.Models.Account;
+using Infrastructure.Services.Interfaces;
+using Infrastructure.Services.Settings;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace BarwyShopAPI.Services
+namespace Infrastructure.Services.Classes
 {
-    public interface IJwtTokenService
-    {
-        Task<string> CreateToken(UserEntity user);
-        Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalLoginRequest request);
-    }
     public class JwtTokenService : IJwtTokenService
     {
         private readonly IConfiguration _configuration;
         private readonly UserManager<UserEntity> _userManager;
         private readonly GoogleAuthSettings _googleAuthSettings;
+
         public JwtTokenService(IConfiguration configuration,
             UserManager<UserEntity> userManager,
             GoogleAuthSettings googleAuthSettings)
@@ -53,7 +51,7 @@ namespace BarwyShopAPI.Services
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
-        public async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalLoginRequest request)
+        public async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalLoginVM request)
         {
             string clientID = _googleAuthSettings.ClientId;
             var settings = new GoogleJsonWebSignature.ValidationSettings()

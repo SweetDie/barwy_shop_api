@@ -1,10 +1,11 @@
 using BarwyShopAPI;
-using BarwyShopAPI.Services;
-using BarwyShopAPI.Settings;
 using DAL;
 using DAL.Entities.Identity;
 using DAL.Repositories.Classes;
 using DAL.Repositories.Interfaces;
+using Infrastructure.Services.Classes;
+using Infrastructure.Services.Interfaces;
+using Infrastructure.Services.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -33,10 +34,13 @@ builder.Services.AddSingleton(googleAuthSettings);
 
 builder.Services.AddControllers();
 
+// Add repositories
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
+// Add services
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

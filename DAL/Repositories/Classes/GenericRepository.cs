@@ -22,8 +22,11 @@ namespace DAL.Repositories.Classes
         public async Task DeleteAsync(T id)
         {
             var entity = await GetByIdAsync(id);
-            _dbContext.Set<TEntity>().Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            if (entity != null)
+            {
+                entity.IsDelete = true;
+                await UpdateAsync(entity);
+            }
         }
 
         public IQueryable<TEntity> GetAll()

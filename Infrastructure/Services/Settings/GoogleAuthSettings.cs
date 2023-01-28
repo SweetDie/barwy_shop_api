@@ -1,4 +1,4 @@
-﻿namespace BarwyShopAPI.Settings
+﻿namespace Infrastructure.Services.Settings
 {
     public class GoogleAuthSettings
     {
