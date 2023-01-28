@@ -27,5 +27,16 @@ namespace DAL.Repositories.Classes
             await _dbContext.CategoryProduct.AddAsync(categoryProduct);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task CreateProduct(Product product, Category category)
+        {
+            var categoryProduct = new CategoryProduct
+            {
+                Category = category,
+                Product = product
+            };
+            await _dbContext.CategoryProduct.AddAsync(categoryProduct);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

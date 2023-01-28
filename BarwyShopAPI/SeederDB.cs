@@ -1,4 +1,5 @@
-﻿using DAL.Entities;
+﻿using DAL;
+using DAL.Entities;
 using DAL.Entities.Identity;
 using DAL.Repositories.Classes;
 using DAL.Repositories.Interfaces;
@@ -18,6 +19,7 @@ namespace BarwyShopAPI
                 var roleManaager = scope.ServiceProvider.GetRequiredService<RoleManager<RoleEntity>>();
                 var categoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
                 var productRepository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppEFContext>();
 
                 if (!roleManaager.Roles.Any())
                 {
@@ -58,42 +60,48 @@ namespace BarwyShopAPI
                 }
 
 
-                // Add products and categories
+                // Add products and categories               
 
                 if (!categoryRepository.Categories.Any() && !productRepository.Products.Any())
                 {
-
-                    await categoryRepository.CreateCategoryAsync(new Category
+                    var category = new Category
                     {
-                        Name = "Патріотичні"
-                    });
-
-                    await categoryRepository.CreateCategoryAsync(new Category
-                    {
-                        Name = "Пейзажі"
-                    });
-
-                    var product = new Product
-                    {
-                        Name = "Тризуб",
+                        Name = "Патріотичні",
+                        NormalizedName = "Патріотичні".ToUpper(),
                         DateCreated = DateTime.Now.ToUniversalTime(),
-                        Price = 245,
-                        Size = "40x50",
-                        Article = "0070P1"
+                        IsDelete = false
                     };
-                    await productRepository.CreateAsync(product);
-                    await productRepository.AddToCategoryAsync(product, "Патріотичні");
 
-                    product = new Product
+                    var categoryProducts = new List<CategoryProduct>
                     {
-                        Name = "Все буде Україна",
-                        DateCreated = DateTime.Now.ToUniversalTime(),
-                        Price = 245,
-                        Size = "40x50",
-                        Article = "0049T1"
-                    };
-                    await productRepository.CreateAsync(product);
-                    //await productRepository.AddToCategoryAsync(product, "Патріотичні");
+                        new CategoryProduct
+                        {
+                            Category = category,
+                            Product = new Product
+                            {
+                                Name = "Все буде Україна",
+                                DateCreated = DateTime.Now.ToUniversalTime(),
+                                Price = 245,
+                                Size = "40x50",
+                                Article = "0049T1"
+                            }
+                        },
+                        new CategoryProduct
+                        {
+                            Category = category,
+                            Product = new Product
+                            {
+                                Name = "Тризуб",
+                                DateCreated = DateTime.Now.ToUniversalTime(),
+                                Price = 245,
+                                Size = "40x50",
+                                Article = "0070P1"
+                            }
+                        }
+                };
+
+                    await dbContext.CategoryProduct.AddRangeAsync(categoryProducts);
+                    await dbContext.SaveChangesAsync();
                 }
             }
         }

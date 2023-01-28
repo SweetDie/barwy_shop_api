@@ -46,12 +46,9 @@ namespace Infrastructure.Services.Classes
 
             foreach (var item in model.Categories)
             {
-                var category = await _categoryRepository.GetByNameAsync(item);
-                categories.Add(category);
+                var category = await _categoryRepository.Categories.FirstOrDefaultAsync(c => c.NormalizedName == item.ToUpper());
+                await _productRepository.CreateProduct(newProduct, category);
             }
-            //newProduct.Categories = categories;
-
-            await _productRepository.CreateAsync(newProduct);
 
             return new ServiceResponse
             {
