@@ -1,4 +1,4 @@
-﻿namespace BarwyShopAPI.Constants
+﻿namespace Infrastructure.Constants
 {
     public class Roles
     {

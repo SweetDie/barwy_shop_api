@@ -1,9 +1,8 @@
-﻿using BarwyShopAPI.Constants;
-using DAL.Entities.Identity;
+﻿using DAL.Entities.Identity;
 using DAL.Entities.Products;
 using DAL.Repositories.Interfaces;
+using Infrastructure.Constants;
 using Microsoft.AspNetCore.Identity;
-using System.Data;
 
 namespace BarwyShopAPI
 {
@@ -62,7 +61,7 @@ namespace BarwyShopAPI
 
                 if (!categoryRepository.Categories.Any() && !productRepository.Products.Any())
                 {
-                    var category =  new Category
+                    var category = new Category
                     {
                         DateCreated = DateTime.Now.ToUniversalTime(),
                         Name = "Патріотичні"

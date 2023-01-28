@@ -1,4 +1,6 @@
 ﻿using DAL.Entities.Identity;
+using FluentValidation;
+using Infrastructure.Constants;
 using Infrastructure.Models.Account;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.Validation;
@@ -66,7 +68,8 @@ namespace Infrastructure.Services.Classes
                             return new ServiceResponse
                             {
                                 IsSuccess = false,
-                                Message = "Помилка створення користувача"
+                                Message = "Помилка створення користувача",
+                                Errors = resultCreate.Errors.Select(e => e.Description)
                             };
                         }
                     }
@@ -139,6 +142,66 @@ namespace Infrastructure.Services.Classes
                 IsSuccess = true,
                 Payload = token,
                 Message = "Успішний вхід"
+            };
+        }
+
+        public async Task<ServiceResponse> RegisterAsync(RegisterVM model)
+        {
+            var validator = new RegisterValidation();
+            var validationResult = await validator.ValidateAsync(model);
+            if (!validationResult.IsValid)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Дані вказано не вірно",
+                    Errors = validationResult.Errors.Select(e => e.ErrorMessage)
+                };
+            }
+
+            var userExist = await _userManager.FindByEmailAsync(model.Email);
+            if(userExist != null) 
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Такий користувач вже зареєстрований"
+                };
+            }
+
+            var newUser = new UserEntity
+            {
+                Email = model.Email,
+                UserName = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName
+            };
+            
+            var resultCreate = await _userManager.CreateAsync(newUser, model.Password);
+            if(!resultCreate.Succeeded)
+            {
+                new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Помилка реєстрації",
+                    Errors = resultCreate.Errors.Select(e => e.Description)
+                };
+            }
+            var resultRole = await _userManager.AddToRoleAsync(newUser, Roles.User);
+            if(!resultRole.Succeeded)
+            {
+                new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Помилка реєстрації",
+                    Errors = resultRole.Errors.Select(e => e.Description)
+                };
+            }
+
+            return new ServiceResponse
+            {
+                IsSuccess = true,
+                Message = "Успішна реєстрація"
             };
         }
     }

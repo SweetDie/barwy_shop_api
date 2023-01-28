@@ -15,9 +15,8 @@ namespace BarwyShopAPI.Controllers
             _accountService = accountService;
         }
 
-        [HttpPost]
-        [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginVM model)
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginAsync([FromBody] LoginVM model)
         {
             var result = await _accountService.LoginAsync(model);
 
@@ -28,10 +27,22 @@ namespace BarwyShopAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("googleExternalLogin")]
+        [HttpPost("externalLogin")]
         public async Task<IActionResult> ExternalLoginAsync([FromBody] ExternalLoginVM model)
         {
             var result = await _accountService.ExternalLoginAsync(model);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterVM model)
+        {
+            var result = await _accountService.RegisterAsync(model);
 
             if (result.IsSuccess)
             {
