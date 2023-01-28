@@ -1,5 +1,6 @@
-﻿using DAL.Entities.Products;
+﻿using DAL.Entities;
 using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.Classes
 {
@@ -10,6 +11,12 @@ namespace DAL.Repositories.Classes
         {
         }
 
-        public IQueryable<Category> Categories => GetAll();
+        public IQueryable<Category> Categories => GetAll().Where(c => c.IsDelete == false).Include(c => c.Products);
+
+        public async Task<Category> GetByNameAsync(string name)
+        {
+            var result = await Categories.AsNoTracking().FirstOrDefaultAsync(c => c.Name == name);
+            return result;
+        }
     }
 }

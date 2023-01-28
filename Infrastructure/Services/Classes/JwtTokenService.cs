@@ -2,7 +2,7 @@
 using Google.Apis.Auth;
 using Infrastructure.Models.Account;
 using Infrastructure.Services.Interfaces;
-using Infrastructure.Services.Settings;
+using Infrastructure.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

@@ -1,5 +1,5 @@
-﻿using DAL.Entities.Identity;
-using DAL.Entities.Products;
+﻿using DAL.Entities;
+using DAL.Entities.Identity;
 using DAL.Repositories.Interfaces;
 using Infrastructure.Constants;
 using Microsoft.AspNetCore.Identity;
@@ -61,10 +61,19 @@ namespace BarwyShopAPI
 
                 if (!categoryRepository.Categories.Any() && !productRepository.Products.Any())
                 {
-                    var category = new Category
+
+                    Category[] categories =
                     {
-                        DateCreated = DateTime.Now.ToUniversalTime(),
-                        Name = "Патріотичні"
+                        new Category
+                        {
+                            DateCreated = DateTime.Now.ToUniversalTime(),
+                            Name = "Патріотичні"
+                        },
+                        new Category
+                        {
+                            DateCreated = DateTime.Now.ToUniversalTime(),
+                            Name = "Пейзажі"
+                        }
                     };
 
                     Product[] products =
@@ -78,7 +87,7 @@ namespace BarwyShopAPI
                             Article = "0070П1",
                             Categories = new List<Category>()
                             {
-                                category
+                                categories[0]
                             }
                         },
                         new Product
@@ -90,14 +99,17 @@ namespace BarwyShopAPI
                             Article = "0049Т1",
                             Categories = new List<Category>()
                             {
-                                category
+                                categories[0]
                             }
                         }
                     };
 
-                    category.Products = products;
+                    categories[0].Products = products;
 
-                    await categoryRepository.CreateAsync(category);
+                    foreach (var item in categories)
+                    {
+                        await categoryRepository.CreateAsync(item);
+                    }
                 }
             }
         }

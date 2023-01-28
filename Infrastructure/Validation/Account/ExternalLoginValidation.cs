@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Infrastructure.Models.Account;
 
-namespace Infrastructure.Validation
+namespace Infrastructure.Validation.Account
 {
     public class ExternalLoginValidation : AbstractValidator<ExternalLoginVM>
     {

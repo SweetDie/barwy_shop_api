@@ -5,7 +5,8 @@ using DAL.Repositories.Classes;
 using DAL.Repositories.Interfaces;
 using Infrastructure.Services.Classes;
 using Infrastructure.Services.Interfaces;
-using Infrastructure.Services.Settings;
+using Infrastructure.Settings;
+using Infrastructure.Settings.Mapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -41,6 +42,11 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 // Add services
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
+// Add automapper
+builder.Services.AddAutoMapper(typeof(AutoMapperProductProfile));
+builder.Services.AddAutoMapper(typeof(AutoMapperCategoryProfile));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DAL.Entities.Products
+namespace DAL.Entities
 {
     public class Product : BaseEntity<Guid>
     {

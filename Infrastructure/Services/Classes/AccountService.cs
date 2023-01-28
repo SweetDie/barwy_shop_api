@@ -1,9 +1,8 @@
 ﻿using DAL.Entities.Identity;
-using FluentValidation;
 using Infrastructure.Constants;
 using Infrastructure.Models.Account;
 using Infrastructure.Services.Interfaces;
-using Infrastructure.Validation;
+using Infrastructure.Validation.Account;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Services.Classes
@@ -160,7 +159,7 @@ namespace Infrastructure.Services.Classes
             }
 
             var userExist = await _userManager.FindByEmailAsync(model.Email);
-            if(userExist != null) 
+            if (userExist != null)
             {
                 return new ServiceResponse
                 {
@@ -176,9 +175,9 @@ namespace Infrastructure.Services.Classes
                 FirstName = model.FirstName,
                 LastName = model.LastName
             };
-            
+
             var resultCreate = await _userManager.CreateAsync(newUser, model.Password);
-            if(!resultCreate.Succeeded)
+            if (!resultCreate.Succeeded)
             {
                 new ServiceResponse
                 {
@@ -188,7 +187,7 @@ namespace Infrastructure.Services.Classes
                 };
             }
             var resultRole = await _userManager.AddToRoleAsync(newUser, Roles.User);
-            if(!resultRole.Succeeded)
+            if (!resultRole.Succeeded)
             {
                 new ServiceResponse
                 {

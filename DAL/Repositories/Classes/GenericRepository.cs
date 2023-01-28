@@ -41,6 +41,16 @@ namespace DAL.Repositories.Classes
                 .FirstOrDefaultAsync(e => e.Id.Equals(id));
         }
 
+        public async Task RestoreAsync(T id)
+        {
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                entity.IsDelete = false;
+                await UpdateAsync(entity);
+            }
+        }
+
         public async Task UpdateAsync(TEntity entity)
         {
             _dbContext.Set<TEntity>().Update(entity);

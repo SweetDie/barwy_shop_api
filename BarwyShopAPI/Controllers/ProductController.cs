@@ -1,4 +1,6 @@
 ﻿using DAL.Repositories.Interfaces;
+using Infrastructure.Models.Product;
+using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarwyShopAPI.Controllers
@@ -7,19 +9,23 @@ namespace BarwyShopAPI.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductService _productService;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductService productService)
         {
-            _productRepository = productRepository;
+            _productService = productService;
         }
 
-        [HttpPost]
-        [Route("remove")]
-        public async Task<IActionResult> Remove([FromBody] string id)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateAsync([FromBody] ProductCreateVM model)
         {
-            await _productRepository.DeleteAsync(Guid.Parse(id));
-            return Ok();
+            var result = await _productService.CreateProductAsync(model);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
 
     }
