@@ -42,13 +42,8 @@ namespace Infrastructure.Services.Classes
 
             var newProduct = _mapper.Map<Product>(model);
             newProduct.DateCreated = DateTime.Now.ToUniversalTime();
-            var categories = new List<Category>();
 
-            foreach (var item in model.Categories)
-            {
-                var category = await _categoryRepository.Categories.FirstOrDefaultAsync(c => c.NormalizedName == item.ToUpper());
-                await _productRepository.CreateProduct(newProduct, category);
-            }
+            await _productRepository.AddToCategoryAsync(newProduct, model.Categories.First());
 
             return new ServiceResponse
             {

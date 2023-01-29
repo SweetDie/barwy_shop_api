@@ -6,6 +6,5 @@ namespace DAL.Repositories.Interfaces
     {
         IQueryable<Product> Products { get; }
         Task AddToCategoryAsync(Product product, string categoryName);
-        Task CreateProduct(Product product, Category category);
     }
 }

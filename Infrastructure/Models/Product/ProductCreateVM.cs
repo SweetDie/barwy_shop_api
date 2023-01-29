@@ -1,6 +1,4 @@
-﻿using Infrastructure.Models.Category;
-
-namespace Infrastructure.Models.Product
+﻿namespace Infrastructure.Models.Product
 {
     public class ProductCreateVM
     {
@@ -15,6 +13,6 @@ namespace Infrastructure.Models.Product
         public decimal Price { get; set; }
         public string Size { get; set; }
 
-        public virtual IEnumerable<string> Categories { get; set; }
+        public virtual ICollection<string> Categories { get; set; }
     }
 }

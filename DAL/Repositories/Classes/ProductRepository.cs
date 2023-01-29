@@ -21,21 +21,12 @@ namespace DAL.Repositories.Classes
             var category = await _dbContext.Categories.AsNoTracking().FirstOrDefaultAsync(c => c.NormalizedName == categoryName.ToUpper());
             var categoryProduct = new CategoryProduct
             {
-                CategoryId = category.Id,
-                ProductId = product.Id
-            };
-            await _dbContext.CategoryProduct.AddAsync(categoryProduct);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task CreateProduct(Product product, Category category)
-        {
-            var categoryProduct = new CategoryProduct
-            {
                 Category = category,
                 Product = product
             };
-            await _dbContext.CategoryProduct.AddAsync(categoryProduct);
+            _dbContext.Entry(category).State = EntityState.Unchanged;
+            _dbContext.Entry(categoryProduct).State = EntityState.Added;
+            _dbContext.Entry(product).State = EntityState.Added;
             await _dbContext.SaveChangesAsync();
         }
     }
