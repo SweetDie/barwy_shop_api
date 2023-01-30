@@ -21,11 +21,6 @@ namespace Infrastructure.Services.Classes
             _mapper = mapper;
         }
 
-        public Task<ServiceResponse> AddCategoryToProductAsync(string category)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<ServiceResponse> CreateProductAsync(ProductCreateVM model)
         {
             var validator = new ProductCreateValidation();
@@ -43,12 +38,20 @@ namespace Infrastructure.Services.Classes
             var newProduct = _mapper.Map<Product>(model);
             newProduct.DateCreated = DateTime.Now.ToUniversalTime();
 
-            await _productRepository.AddToCategoryAsync(newProduct, model.Categories.First());
+            var resultCreate = await _productRepository.CreateProductAsync(newProduct, model.Categories);
 
+            if(resultCreate)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = true,
+                    Message = "Товар створено"
+                };
+            }
             return new ServiceResponse
             {
-                IsSuccess = true,
-                Message = "Товар створено"
+                IsSuccess = false,
+                Message = "Товар не створено"
             };
         }
 

@@ -8,7 +8,7 @@ namespace DAL.Repositories.Interfaces
 
         Task<TEntity> GetByIdAsync(T id);
 
-        Task CreateAsync(TEntity entity);
+        Task<bool> CreateAsync(TEntity entity);
 
         Task UpdateAsync(TEntity entity);
 

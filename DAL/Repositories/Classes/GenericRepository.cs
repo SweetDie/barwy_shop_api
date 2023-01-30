@@ -13,10 +13,11 @@ namespace DAL.Repositories.Classes
             _dbContext = dbContext;
         }
 
-        public async Task CreateAsync(TEntity entity)
+        public async Task<bool> CreateAsync(TEntity entity)
         {
             await _dbContext.Set<TEntity>().AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
+            var result = await _dbContext.SaveChangesAsync();
+            return result == 0 ? false : true;
         }
 
         public async Task DeleteAsync(T id)

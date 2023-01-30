@@ -16,18 +16,41 @@ namespace DAL.Repositories.Classes
 
         public IQueryable<Product> Products => GetAll().Where(p => p.IsDelete == false).Include(p => p.CategoryProduct);
 
-        public async Task AddToCategoryAsync(Product product, string categoryName)
+        public async Task<bool> AddToCategoryAsync(Product product, string categoryName)
         {
             var category = await _dbContext.Categories.AsNoTracking().FirstOrDefaultAsync(c => c.NormalizedName == categoryName.ToUpper());
+            if (category == null)
+            {
+                return false;
+            }
             var categoryProduct = new CategoryProduct
             {
                 Category = category,
                 Product = product
             };
+            _dbContext.Entry(product).State = EntityState.Unchanged;
             _dbContext.Entry(category).State = EntityState.Unchanged;
-            _dbContext.Entry(categoryProduct).State = EntityState.Added;
             _dbContext.Entry(product).State = EntityState.Added;
-            await _dbContext.SaveChangesAsync();
+            var result = await _dbContext.SaveChangesAsync();
+            return result == 0 ? false : true;
+        }
+
+        public async Task<bool> CreateProductAsync(Product product, ICollection<string> categories)
+        {
+            var createResult = await CreateAsync(product);
+            if(createResult)
+            {
+                foreach (var category in categories)
+                {
+                    var resultAddToCategory = await AddToCategoryAsync(product, category);
+                    if(!resultAddToCategory)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
         }
     }
 }
