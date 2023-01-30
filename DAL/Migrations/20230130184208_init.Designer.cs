@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppEFContext))]
-    [Migration("20230128182324_add CategoryProduct table")]
-    partial class addCategoryProducttable
+    [Migration("20230130184208_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,7 +41,13 @@ namespace DAL.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Categories");
                 });
@@ -308,14 +314,14 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.CategoryProduct", b =>
                 {
-                    b.HasOne("DAL.Entities.Product", "Product")
-                        .WithMany("Categories")
+                    b.HasOne("DAL.Entities.Category", "Category")
+                        .WithMany("CategoryProduct")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entities.Category", "Category")
-                        .WithMany("Products")
+                    b.HasOne("DAL.Entities.Product", "Product")
+                        .WithMany("CategoryProduct")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -382,7 +388,7 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.Category", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("CategoryProduct");
                 });
 
             modelBuilder.Entity("DAL.Entities.Identity.RoleEntity", b =>
@@ -397,7 +403,7 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.Product", b =>
                 {
-                    b.Navigation("Categories");
+                    b.Navigation("CategoryProduct");
                 });
 #pragma warning restore 612, 618
         }

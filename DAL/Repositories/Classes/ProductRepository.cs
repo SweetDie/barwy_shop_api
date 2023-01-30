@@ -30,7 +30,7 @@ namespace DAL.Repositories.Classes
             };
             _dbContext.Entry(product).State = EntityState.Unchanged;
             _dbContext.Entry(category).State = EntityState.Unchanged;
-            _dbContext.Entry(product).State = EntityState.Added;
+            _dbContext.Entry(categoryProduct).State = EntityState.Added;
             var result = await _dbContext.SaveChangesAsync();
             return result == 0 ? false : true;
         }

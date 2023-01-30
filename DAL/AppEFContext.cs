@@ -42,11 +42,11 @@ namespace DAL
             builder.Entity<CategoryProduct>()
                 .HasKey(cp => new { cp.CategoryId, cp.ProductId });
             builder.Entity<CategoryProduct>()
-                .HasOne(cp => cp.Category)
+                .HasOne(cp => cp.Product)
                 .WithMany(c => c.CategoryProduct)
                 .HasForeignKey(cp => cp.ProductId);
             builder.Entity<CategoryProduct>()
-                .HasOne(cp => cp.Product)
+                .HasOne(cp => cp.Category)
                 .WithMany(c => c.CategoryProduct)
                 .HasForeignKey(cp => cp.CategoryId);
 

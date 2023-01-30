@@ -47,7 +47,7 @@ namespace DAL.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("DAL.Entities.CategoryProduct", b =>
@@ -62,7 +62,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CategoryProduct", (string)null);
+                    b.ToTable("CategoryProduct");
                 });
 
             modelBuilder.Entity("DAL.Entities.Identity.RoleEntity", b =>
@@ -216,7 +216,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -312,14 +312,14 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.CategoryProduct", b =>
                 {
-                    b.HasOne("DAL.Entities.Product", "Product")
-                        .WithMany("Categories")
+                    b.HasOne("DAL.Entities.Category", "Category")
+                        .WithMany("CategoryProduct")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entities.Category", "Category")
-                        .WithMany("Products")
+                    b.HasOne("DAL.Entities.Product", "Product")
+                        .WithMany("CategoryProduct")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -386,7 +386,7 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.Category", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("CategoryProduct");
                 });
 
             modelBuilder.Entity("DAL.Entities.Identity.RoleEntity", b =>
@@ -401,7 +401,7 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.Product", b =>
                 {
-                    b.Navigation("Categories");
+                    b.Navigation("CategoryProduct");
                 });
 #pragma warning restore 612, 618
         }
