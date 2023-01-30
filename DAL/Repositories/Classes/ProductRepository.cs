@@ -25,12 +25,13 @@ namespace DAL.Repositories.Classes
             }
             var categoryProduct = new CategoryProduct
             {
-                Category = category,
-                Product = product
+                CategoryId = category.Id,
+                ProductId = product.Id
             };
-            _dbContext.Entry(product).State = EntityState.Unchanged;
-            _dbContext.Entry(category).State = EntityState.Unchanged;
-            _dbContext.Entry(categoryProduct).State = EntityState.Added;
+            //_dbContext.Entry(product).State = EntityState.Unchanged;
+            //_dbContext.Entry(category).State = EntityState.Unchanged;
+            //_dbContext.Entry(categoryProduct).State = EntityState.Added
+            await _dbContext.CategoryProduct.AddAsync(categoryProduct);
             var result = await _dbContext.SaveChangesAsync();
             return result == 0 ? false : true;
         }
