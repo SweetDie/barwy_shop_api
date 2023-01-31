@@ -65,6 +65,14 @@ namespace BarwyShopAPI
                         DateCreated = DateTime.Now.ToUniversalTime()
                     };
                     await categoryRepository.CreateAsync(category);
+
+                    category = new Category
+                    {
+                        Name = "Пейзажі",
+                        NormalizedName = "Пейзажі".ToUpper(),
+                        DateCreated = DateTime.Now.ToUniversalTime()
+                    };
+                    await categoryRepository.CreateAsync(category);
                 }
 
                 if (!productRepository.Products.Any())

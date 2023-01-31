@@ -49,7 +49,7 @@ namespace Infrastructure.Services.Classes
                  };
              }
 
-            var resultAddCategory = await _productRepository.AddToCategoryAsync(newProduct, model.Categories);
+            var resultAddCategory = await _productRepository.AddToCategoryAsync(newProduct, model.Categories.Select(c => c.Name));
 
             if (!resultAddCategory)
             {
@@ -72,6 +72,74 @@ namespace Infrastructure.Services.Classes
             var products = await _productRepository.Products.ToListAsync();
             var productsVM = _mapper.Map<List<ProductVM>>(products);
             return productsVM;
+        }
+
+        public async Task<ServiceResponse> RestoreProductAsync(Guid id)
+        {
+            var result = await _productRepository.RestoreAsync(id);
+            if(!result)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Не вдалося відновити"
+                };
+            }
+            return new ServiceResponse
+            {
+                IsSuccess = true,
+                Message = "Товар відновлено"
+            };
+        }
+
+        public async Task<ServiceResponse> DeleteProductAsync(Guid id)
+        {
+            var result = await _productRepository.DeleteAsync(id);
+            if (!result)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Не вдалося видалити"
+                };
+            }
+            return new ServiceResponse
+            {
+                IsSuccess = true,
+                Message = "Товар видалено"
+            };
+        }
+
+        public async Task<ServiceResponse> UpdateProductAsync(ProductUpdateVM model)
+        {
+            var validator = new ProductUpdateValidation();
+            var validationResult = validator.Validate(model);
+            if(!validationResult.IsValid)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Некоректні дані",
+                    Errors = validationResult.Errors.Select(e => e.ErrorMessage)
+                };
+            }
+            var newProduct = _mapper.Map<Product>(model);
+            var result = await _productRepository.UpdateAsync(newProduct);
+
+            if (!result)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Не вдалося оновити товар"
+                };
+            }
+
+            return new ServiceResponse
+            {
+                IsSuccess = true,
+                Message = "Товар успішно оновлено"
+            };
         }
     }
 }

@@ -20,14 +20,16 @@ namespace DAL.Repositories.Classes
             return result != 0;
         }
 
-        public async Task DeleteAsync(T id)
+        public async Task<bool> DeleteAsync(T id)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
             {
                 entity.IsDelete = true;
-                await UpdateAsync(entity);
+                var result = await UpdateAsync(entity);
+                return result;
             }
+            return false;
         }
 
         public IQueryable<TEntity> GetAll()
@@ -42,20 +44,23 @@ namespace DAL.Repositories.Classes
                 .FirstOrDefaultAsync(e => e.Id.Equals(id));
         }
 
-        public async Task RestoreAsync(T id)
+        public async Task<bool> RestoreAsync(T id)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
             {
                 entity.IsDelete = false;
-                await UpdateAsync(entity);
+                var result = await UpdateAsync(entity);
+                return result;
             }
+            return false;
         }
 
-        public async Task UpdateAsync(TEntity entity)
+        public async Task<bool> UpdateAsync(TEntity entity)
         {
             _dbContext.Set<TEntity>().Update(entity);
-            await _dbContext.SaveChangesAsync();
+            var result = await _dbContext.SaveChangesAsync();
+            return result != 0;
         }
     }
 }

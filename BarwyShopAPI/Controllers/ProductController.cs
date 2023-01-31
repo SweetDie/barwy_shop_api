@@ -1,5 +1,4 @@
-﻿using DAL.Repositories.Interfaces;
-using Infrastructure;
+﻿using Infrastructure;
 using Infrastructure.Models.Product;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +28,27 @@ namespace BarwyShopAPI.Controllers
         {
             var products = await _productService.GetAllProductsAsync();
             return Ok(products);
+        }
+
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateProductAsync([FromBody] ProductUpdateVM model)
+        {
+            var products = await _productService.UpdateProductAsync(model);
+            return Ok(products);
+        }
+
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteProductAsync([FromBody] string id)
+        {
+            var result = await _productService.DeleteProductAsync(Guid.Parse(id));
+            return SendResponse(result);
+        }
+
+        [HttpPost("restore")]
+        public async Task<IActionResult> RestoreProductAsync([FromBody] string id)
+        {
+            var result = await _productService.RestoreProductAsync(Guid.Parse(id));
+            return SendResponse(result);
         }
 
         private IActionResult SendResponse(ServiceResponse response)

@@ -10,6 +10,14 @@ namespace Infrastructure.Settings.Mapper
         {
             CreateMap<CategoryVM, Category>();
             CreateMap<Category, CategoryVM>();
+            CreateMap<CategoryProduct, CategoryVM>()
+                .ForMember(
+                c => c.Id,
+                opt => opt.MapFrom(cp => cp.CategoryId))
+                .ForMember(
+                c => c.Name,
+                opt => opt.MapFrom(cp => cp.Category.Name));
+                
         }
     }
 }

@@ -10,9 +10,9 @@ namespace DAL.Repositories.Interfaces
 
         Task<bool> CreateAsync(TEntity entity);
 
-        Task UpdateAsync(TEntity entity);
+        Task<bool> UpdateAsync(TEntity entity);
 
-        Task DeleteAsync(T id);
-        Task RestoreAsync(T id);
+        Task<bool> DeleteAsync(T id);
+        Task<bool> RestoreAsync(T id);
     }
 }

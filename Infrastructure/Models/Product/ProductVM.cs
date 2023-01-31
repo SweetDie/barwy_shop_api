@@ -1,10 +1,12 @@
-﻿namespace Infrastructure.Models.Product
+﻿using Infrastructure.Models.Category;
+
+namespace Infrastructure.Models.Product
 {
     public class ProductVM
     {
         public ProductVM()
         {
-            Categories = new List<string>();
+            Categories = new List<CategoryVM>();
         }
 
         public string Id { get; set; }
@@ -14,6 +16,6 @@
         public decimal Price { get; set; }
         public string Size { get; set; }
 
-        public virtual IEnumerable<string> Categories { get; set; }
+        public virtual IEnumerable<CategoryVM> Categories { get; set; }
     }
 }
