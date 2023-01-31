@@ -1,4 +1,5 @@
 ﻿using DAL.Repositories.Interfaces;
+using Infrastructure;
 using Infrastructure.Models.Product;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -20,13 +21,23 @@ namespace BarwyShopAPI.Controllers
         public async Task<IActionResult> CreateAsync([FromBody] ProductCreateVM model)
         {
             var result = await _productService.CreateProductAsync(model);
-
-            if (result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
+            return SendResponse(result);
         }
 
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAllProductsAsync()
+        {
+            var products = await _productService.GetAllProductsAsync();
+            return Ok(products);
+        }
+
+        private IActionResult SendResponse(ServiceResponse response)
+        {
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
     }
 }

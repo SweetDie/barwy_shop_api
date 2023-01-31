@@ -1,14 +1,12 @@
-﻿using DAL;
-using DAL.Entities;
+﻿using DAL.Entities;
 using DAL.Entities.Identity;
-using DAL.Repositories.Classes;
 using DAL.Repositories.Interfaces;
 using Infrastructure.Constants;
 using Microsoft.AspNetCore.Identity;
 
 namespace BarwyShopAPI
 {
-    public static class SeederDB
+    public static class SeederDb
     {
         public static async void SeedData(this IApplicationBuilder app)
         {
@@ -16,37 +14,37 @@ namespace BarwyShopAPI
                 .GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
-                var roleManaager = scope.ServiceProvider.GetRequiredService<RoleManager<RoleEntity>>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<RoleEntity>>();
                 var categoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
                 var productRepository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppEFContext>();
 
-                if (!roleManaager.Roles.Any())
+                if (!roleManager.Roles.Any())
                 {
-                    var result = roleManaager.CreateAsync(new RoleEntity
+                   await roleManager.CreateAsync(new RoleEntity
                     {
                         Name = Roles.Admin
-                    }).Result;
-                    result = roleManaager.CreateAsync(new RoleEntity
+                    });
+                        
+                    await roleManager.CreateAsync(new RoleEntity
                     {
                         Name = Roles.User
-                    }).Result;
+                    });
                 }
 
                 if (!userManager.Users.Any())
                 {
-                    string adminEmail = "admin@gmail.com";
+                    const string adminEmail = "admin@gmail.com";    
                     var admin = new UserEntity
-                    {
-                        Email = adminEmail,
+                    {                         
+                        Email = adminEmail,   
                         UserName = adminEmail,
-                        FirstName = "Admin",
-                        LastName = "Admin"
+                        FirstName = "Admin",  
+                        LastName = "Admin"    
                     };
-                    var result = await userManager.CreateAsync(admin, "123456");
-                    result = await userManager.AddToRoleAsync(admin, Roles.Admin);
-
-                    string userEmail = "user@gmail.com";
+                    await userManager.CreateAsync(admin, "123456");
+                    await userManager.AddToRoleAsync(admin, Roles.Admin);
+                    
+                    const string userEmail = "user@gmail.com";
                     var user = new UserEntity
                     {
                         Email = userEmail,
@@ -54,54 +52,44 @@ namespace BarwyShopAPI
                         FirstName = "User",
                         LastName = "User"
                     };
-
-                    result = await userManager.CreateAsync(user, "123456");
-                    result = await userManager.AddToRoleAsync(user, Roles.User);
+                    await userManager.CreateAsync(user, "123456");
+                    await userManager.AddToRoleAsync(user, Roles.User);
                 }
 
-
-                // Add products and categories               
-
-                if (!categoryRepository.Categories.Any() && !productRepository.Products.Any())
+                if (!categoryRepository.Categories.Any())
                 {
                     var category = new Category
                     {
                         Name = "Патріотичні",
                         NormalizedName = "Патріотичні".ToUpper(),
-                        DateCreated = DateTime.Now.ToUniversalTime(),
-                        IsDelete = false
+                        DateCreated = DateTime.Now.ToUniversalTime()
                     };
+                    await categoryRepository.CreateAsync(category);
+                }
 
-                    var categoryProducts = new List<CategoryProduct>
+                if (!productRepository.Products.Any())
+                {
+                    var product = new Product
                     {
-                        new CategoryProduct
-                        {
-                            Category = category,
-                            Product = new Product
-                            {
-                                Name = "Все буде Україна",
-                                DateCreated = DateTime.Now.ToUniversalTime(),
-                                Price = 245,
-                                Size = "40x50",
-                                Article = "0049T1"
-                            }
-                        },
-                        new CategoryProduct
-                        {
-                            Category = category,
-                            Product = new Product
-                            {
-                                Name = "Тризуб",
-                                DateCreated = DateTime.Now.ToUniversalTime(),
-                                Price = 245,
-                                Size = "40x50",
-                                Article = "0070P1"
-                            }
-                        }
-                };
-
-                    await dbContext.CategoryProduct.AddRangeAsync(categoryProducts);
-                    await dbContext.SaveChangesAsync();
+                        Name = "Все буде Україна",
+                        DateCreated = DateTime.Now.ToUniversalTime(),
+                        Price = 245,
+                        Size = "40x50",
+                        Article = "0049T1"
+                    };
+                    await productRepository.CreateAsync(product);
+                    await productRepository.AddToCategoryAsync(product, "Патріотичні");
+                    
+                    product = new Product
+                    {
+                        Name = "Тризуб",
+                        DateCreated = DateTime.Now.ToUniversalTime(),
+                        Price = 245,
+                        Size = "40x50",
+                        Article = "0070P1"
+                    };
+                    await productRepository.CreateAsync(product);
+                    await productRepository.AddToCategoryAsync(product, "Патріотичні");
                 }
             }
         }

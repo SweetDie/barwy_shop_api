@@ -38,26 +38,40 @@ namespace Infrastructure.Services.Classes
             var newProduct = _mapper.Map<Product>(model);
             newProduct.DateCreated = DateTime.Now.ToUniversalTime();
 
-            var resultCreate = await _productRepository.CreateProductAsync(newProduct, model.Categories);
+            var resultCreate = await _productRepository.CreateAsync(newProduct);
 
-            if(resultCreate)
+            if(!resultCreate)
+             {
+                 return new ServiceResponse
+                 {
+                     IsSuccess = false,
+                     Message = "Помилка при створенні товару"
+                 };
+             }
+
+            var resultAddCategory = await _productRepository.AddToCategoryAsync(newProduct, model.Categories);
+
+            if (!resultAddCategory)
             {
                 return new ServiceResponse
                 {
-                    IsSuccess = true,
-                    Message = "Товар створено"
+                    IsSuccess = false,
+                    Message = "Помилка при створенні товару"
                 };
             }
+            
             return new ServiceResponse
             {
-                IsSuccess = false,
-                Message = "Товар не створено"
+                IsSuccess = true,
+                Message = "Товар успішно створено"
             };
         }
 
-        public Task<ServiceResponse> DeleteProductAsync(Guid id)
+        public async Task<List<ProductVM>> GetAllProductsAsync()
         {
-            throw new NotImplementedException();
+            var products = await _productRepository.Products.ToListAsync();
+            var productsVM = _mapper.Map<List<ProductVM>>(products);
+            return productsVM;
         }
     }
 }

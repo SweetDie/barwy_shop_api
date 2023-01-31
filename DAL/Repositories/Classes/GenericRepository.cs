@@ -17,7 +17,7 @@ namespace DAL.Repositories.Classes
         {
             await _dbContext.Set<TEntity>().AddAsync(entity);
             var result = await _dbContext.SaveChangesAsync();
-            return result == 0 ? false : true;
+            return result != 0;
         }
 
         public async Task DeleteAsync(T id)

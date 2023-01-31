@@ -28,30 +28,22 @@ namespace DAL.Repositories.Classes
                 CategoryId = category.Id,
                 ProductId = product.Id
             };
-            //_dbContext.Entry(product).State = EntityState.Unchanged;
-            //_dbContext.Entry(category).State = EntityState.Unchanged;
-            //_dbContext.Entry(categoryProduct).State = EntityState.Added
             await _dbContext.CategoryProduct.AddAsync(categoryProduct);
             var result = await _dbContext.SaveChangesAsync();
-            return result == 0 ? false : true;
+            return result != 0;
         }
-
-        public async Task<bool> CreateProductAsync(Product product, ICollection<string> categories)
+        
+        public async Task<bool> AddToCategoryAsync(Product product, IEnumerable<string> categories)
         {
-            var createResult = await CreateAsync(product);
-            if(createResult)
+            foreach (var category in categories)
             {
-                foreach (var category in categories)
+                var result = await AddToCategoryAsync(product: product, categoryName: category);
+                if (!result)
                 {
-                    var resultAddToCategory = await AddToCategoryAsync(product, category);
-                    if(!resultAddToCategory)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
-                return true;
             }
-            return false;
+            return true;
         }
     }
 }
