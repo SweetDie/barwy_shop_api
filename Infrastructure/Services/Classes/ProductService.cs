@@ -66,7 +66,8 @@ namespace Infrastructure.Services.Classes
             return new ServiceResponse
             {
                 IsSuccess = true,
-                Message = "Товар успішно створено"
+                Message = "Товар успішно створено",
+                Payload = newProduct
             };
         }
 
@@ -173,6 +174,55 @@ namespace Infrastructure.Services.Classes
                 IsSuccess = true,
                 Message = "Products loaded",
                 Payload = products
+            };
+        }
+
+        public async Task<ServiceResponse> UploadImageAsync(ProductUploadImageVM model)
+        {
+            var product = await _productRepository.GetByIdAsync(model.ProductId);
+
+            if(product == null)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Такий продукт більше не існує"
+                };
+            }
+
+            if(model.Image == null)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Не вдалося завантажити зображення"
+                };
+            }
+
+            var fileExp = Path.GetExtension(model.Image.FileName);
+            var dir = Path.Combine(Directory.GetCurrentDirectory(), "Images");
+            string fileName = Path.GetRandomFileName() + fileExp;
+
+            using (var stream = File.Create(Path.Combine(dir, fileName)))
+            {
+                await model.Image.CopyToAsync(stream);
+            }
+
+            product.Image = fileName;
+            var resultUpdate = await _productRepository.UpdateAsync(product);
+            if(!resultUpdate)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Не вдалося завантажити зображення"
+                };
+            }
+
+            return new ServiceResponse
+            {
+                IsSuccess = true,
+                Message = "Зображення успішно завантажено"
             };
         }
     }

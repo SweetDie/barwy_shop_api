@@ -17,9 +17,16 @@ namespace BarwyShopAPI.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateAsync([FromForm] ProductCreateVM model)
+        public async Task<IActionResult> CreateAsync([FromBody] ProductCreateVM model)
         {
             var result = await _productService.CreateAsync(model);
+            return SendResponse(result);
+        }
+
+        [HttpPost("uploadImage")]
+        public async Task<IActionResult> UploadImageAsync([FromForm] ProductUploadImageVM model)
+        {
+            var result = await _productService.UploadImageAsync(model);
             return SendResponse(result);
         }
 
@@ -27,7 +34,7 @@ namespace BarwyShopAPI.Controllers
         public async Task<IActionResult> GetAllProductsAsync()
         {
             var products = await _productService.GetAllAsync();
-            return Ok(products);
+            return SendResponse(products);
         }
 
         [HttpPost("update")]
@@ -51,11 +58,11 @@ namespace BarwyShopAPI.Controllers
             return SendResponse(result);
         }
 
-        [HttpPost("getAllByCategory")]
+        [HttpGet("getAllByCategory")]
         public async Task<IActionResult> GetAllByCategoryAsync([FromBody] string categoryName)
         {
             var products = await _productService.GetAllByCategoryAsync(categoryName);
-            return Ok(products);
+            return SendResponse(products);
         }
 
         private IActionResult SendResponse(ServiceResponse response)
