@@ -21,7 +21,7 @@ namespace Infrastructure.Services.Classes
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse> CreateProductAsync(ProductCreateVM model)
+        public async Task<ServiceResponse> CreateAsync(ProductCreateVM model)
         {
             var validator = new ProductCreateValidation();
             var validationResult = await validator.ValidateAsync(model);
@@ -36,7 +36,6 @@ namespace Infrastructure.Services.Classes
             }
 
             var newProduct = _mapper.Map<Product>(model);
-            newProduct.DateCreated = DateTime.Now.ToUniversalTime();
 
             var resultCreate = await _productRepository.CreateAsync(newProduct);
 
@@ -67,14 +66,14 @@ namespace Infrastructure.Services.Classes
             };
         }
 
-        public async Task<List<ProductVM>> GetAllProductsAsync()
+        public async Task<List<ProductVM>> GetAllAsync()
         {
             var products = await _productRepository.Products.ToListAsync();
             var productsVM = _mapper.Map<List<ProductVM>>(products);
             return productsVM;
         }
 
-        public async Task<ServiceResponse> RestoreProductAsync(Guid id)
+        public async Task<ServiceResponse> RestoreAsync(Guid id)
         {
             var result = await _productRepository.RestoreAsync(id);
             if(!result)
@@ -92,7 +91,7 @@ namespace Infrastructure.Services.Classes
             };
         }
 
-        public async Task<ServiceResponse> DeleteProductAsync(Guid id)
+        public async Task<ServiceResponse> DeleteAsync(Guid id)
         {
             var result = await _productRepository.DeleteAsync(id);
             if (!result)
@@ -110,7 +109,7 @@ namespace Infrastructure.Services.Classes
             };
         }
 
-        public async Task<ServiceResponse> UpdateProductAsync(ProductUpdateVM model)
+        public async Task<ServiceResponse> UpdateAsync(ProductUpdateVM model)
         {
             var validator = new ProductUpdateValidation();
             var validationResult = validator.Validate(model);

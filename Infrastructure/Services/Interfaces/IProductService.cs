@@ -4,10 +4,10 @@ namespace Infrastructure.Services.Interfaces
 {
     public interface IProductService
     {
-        Task<List<ProductVM>> GetAllProductsAsync();
-        Task<ServiceResponse> CreateProductAsync(ProductCreateVM model);
-        Task<ServiceResponse> DeleteProductAsync(Guid id);
-        Task<ServiceResponse> RestoreProductAsync(Guid id);
-        Task<ServiceResponse> UpdateProductAsync(ProductUpdateVM model);
+        Task<List<ProductVM>> GetAllAsync();
+        Task<ServiceResponse> CreateAsync(ProductCreateVM model);
+        Task<ServiceResponse> DeleteAsync(Guid id);
+        Task<ServiceResponse> RestoreAsync(Guid id);
+        Task<ServiceResponse> UpdateAsync(ProductUpdateVM model);
     }
 }

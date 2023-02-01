@@ -1,4 +1,5 @@
-﻿using Infrastructure.Models.Account;
+﻿using Infrastructure;
+using Infrastructure.Models.Account;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,36 +20,30 @@ namespace BarwyShopAPI.Controllers
         public async Task<IActionResult> LoginAsync([FromBody] LoginVM model)
         {
             var result = await _accountService.LoginAsync(model);
-
-            if (result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
+            return SendResponse(result);
         }
 
         [HttpPost("externalLogin")]
         public async Task<IActionResult> ExternalLoginAsync([FromBody] ExternalLoginVM model)
         {
             var result = await _accountService.ExternalLoginAsync(model);
-
-            if (result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
+            return SendResponse(result);
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterVM model)
         {
             var result = await _accountService.RegisterAsync(model);
-
-            if (result.IsSuccess)
+            return SendResponse(result);
+        }
+        
+        private IActionResult SendResponse(ServiceResponse response)
+        {
+            if (response.IsSuccess)
             {
-                return Ok(result);
+                return Ok(response);
             }
-            return BadRequest(result);
+            return BadRequest(response);
         }
     }
 }

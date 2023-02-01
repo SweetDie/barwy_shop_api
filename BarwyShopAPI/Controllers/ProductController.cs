@@ -19,35 +19,35 @@ namespace BarwyShopAPI.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateAsync([FromBody] ProductCreateVM model)
         {
-            var result = await _productService.CreateProductAsync(model);
+            var result = await _productService.CreateAsync(model);
             return SendResponse(result);
         }
 
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAllProductsAsync()
         {
-            var products = await _productService.GetAllProductsAsync();
+            var products = await _productService.GetAllAsync();
             return Ok(products);
         }
 
         [HttpPost("update")]
         public async Task<IActionResult> UpdateProductAsync([FromBody] ProductUpdateVM model)
         {
-            var products = await _productService.UpdateProductAsync(model);
+            var products = await _productService.UpdateAsync(model);
             return Ok(products);
         }
 
         [HttpPost("delete")]
         public async Task<IActionResult> DeleteProductAsync([FromBody] string id)
         {
-            var result = await _productService.DeleteProductAsync(Guid.Parse(id));
+            var result = await _productService.DeleteAsync(Guid.Parse(id));
             return SendResponse(result);
         }
 
         [HttpPost("restore")]
         public async Task<IActionResult> RestoreProductAsync([FromBody] string id)
         {
-            var result = await _productService.RestoreProductAsync(Guid.Parse(id));
+            var result = await _productService.RestoreAsync(Guid.Parse(id));
             return SendResponse(result);
         }
 

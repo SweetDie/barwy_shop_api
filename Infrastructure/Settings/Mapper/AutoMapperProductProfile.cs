@@ -13,7 +13,10 @@ namespace Infrastructure.Settings.Mapper
                 pvm => pvm.Categories,
                 opt => opt.MapFrom(p => p.CategoryProduct));
             CreateMap<ProductVM, Product>();
-            CreateMap<ProductCreateVM, Product>().ForMember(p => p.CategoryProduct, c => c.Ignore());
+            CreateMap<ProductCreateVM, Product>()
+                .ForMember(
+                    dest => dest.DateCreated,
+                    opt => opt.MapFrom(src => DateTime.Now.ToUniversalTime()));
             CreateMap<ProductUpdateVM, Product>();
         }
     }

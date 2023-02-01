@@ -8,16 +8,24 @@ namespace Infrastructure.Settings.Mapper
     {
         public AutoMapperCategoryProfile()
         {
-            CreateMap<CategoryVM, Category>();
+            CreateMap<CategoryVM, Category>()
+                .ForMember(dest => dest.NormalizedName,
+                    opt => opt.MapFrom(src => src.Name.ToUpper()));
             CreateMap<Category, CategoryVM>();
             CreateMap<CategoryProduct, CategoryVM>()
                 .ForMember(
-                c => c.Id,
-                opt => opt.MapFrom(cp => cp.CategoryId))
+                    dest => dest.Id,
+                opt => opt.MapFrom(src => src.CategoryId))
                 .ForMember(
-                c => c.Name,
-                opt => opt.MapFrom(cp => cp.Category.Name));
-                
+                    dest => dest.Name,
+                opt => opt.MapFrom(src => src.Category.Name));
+            CreateMap<CategoryCreateVM, Category>()
+                .ForMember(
+                    dest => dest.NormalizedName,
+                    opt => opt.MapFrom((src => src.Name.ToUpper())))
+                .ForMember(
+                    dest => dest.DateCreated,
+                    opt => opt.MapFrom(src => DateTime.Now.ToUniversalTime()));
         }
     }
 }

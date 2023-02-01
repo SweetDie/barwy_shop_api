@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 namespace DAL.Entities
 {
@@ -8,6 +9,7 @@ namespace DAL.Entities
     {
         [Required, StringLength(255)]
         public string Name { get; set; }
+
         public string NormalizedName { get; set; }
 
         public virtual ICollection<CategoryProduct> CategoryProduct { get; set; }

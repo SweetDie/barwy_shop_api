@@ -28,5 +28,11 @@ namespace DAL.Repositories.Classes
             var result = await Categories.AsNoTracking().FirstOrDefaultAsync(c => c.Name == name);
             return result;
         }
+
+        public async Task<bool> IsExistAsync(string name)
+        {
+            var result = await _dbContext.Categories.FirstOrDefaultAsync(c => c.NormalizedName == name.ToUpper());
+            return result != null;
+        }
     }
 }
