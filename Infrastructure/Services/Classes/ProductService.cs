@@ -140,5 +140,16 @@ namespace Infrastructure.Services.Classes
                 Message = "Товар успішно оновлено"
             };
         }
+
+        public async Task<List<ProductVM>> GetAllByCategoryAsync(string categoryName)
+        {
+            var categoryProducts = await _productRepository.Products
+                .SelectMany(p => p.CategoryProduct.Where(cp => cp.Category.Name == categoryName))
+                .Include(cp => cp.Product)
+                .ToListAsync();
+            var products = categoryProducts.Select(cp => cp.Product);
+            var productsVM = _mapper.Map<List<ProductVM>>(products);
+            return productsVM;
+        }
     }
 }

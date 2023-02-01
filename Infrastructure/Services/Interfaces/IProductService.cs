@@ -9,5 +9,6 @@ namespace Infrastructure.Services.Interfaces
         Task<ServiceResponse> DeleteAsync(Guid id);
         Task<ServiceResponse> RestoreAsync(Guid id);
         Task<ServiceResponse> UpdateAsync(ProductUpdateVM model);
+        Task<List<ProductVM>> GetAllByCategoryAsync(string categoryName);
     }
 }

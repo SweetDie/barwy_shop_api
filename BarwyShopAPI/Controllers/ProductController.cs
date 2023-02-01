@@ -51,6 +51,13 @@ namespace BarwyShopAPI.Controllers
             return SendResponse(result);
         }
 
+        [HttpPost("getAllByCategory")]
+        public async Task<IActionResult> GetAllByCategoryAsync([FromBody] string categoryName)
+        {
+            var products = await _productService.GetAllByCategoryAsync(categoryName);
+            return Ok(products);
+        }
+
         private IActionResult SendResponse(ServiceResponse response)
         {
             if (response.IsSuccess)
