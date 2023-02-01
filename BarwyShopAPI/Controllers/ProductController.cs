@@ -17,7 +17,7 @@ namespace BarwyShopAPI.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateAsync([FromBody] ProductCreateVM model)
+        public async Task<IActionResult> CreateAsync([FromForm] ProductCreateVM model)
         {
             var result = await _productService.CreateAsync(model);
             return SendResponse(result);

@@ -1,14 +1,10 @@
 ﻿using Infrastructure.Models.Category;
+using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Models.Product
 {
     public class ProductVM
     {
-        public ProductVM()
-        {
-            Categories = new List<CategoryVM>();
-        }
-
         public string Id { get; set; }
         public string Name { get; set; }
         public string Image { get; set; }
@@ -16,6 +12,6 @@ namespace Infrastructure.Models.Product
         public decimal Price { get; set; }
         public string Size { get; set; }
 
-        public virtual IEnumerable<CategoryVM> Categories { get; set; }
+        public virtual ICollection<CategoryVM> Categories { get; set; }
     }
 }

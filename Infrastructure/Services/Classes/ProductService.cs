@@ -70,11 +70,16 @@ namespace Infrastructure.Services.Classes
             };
         }
 
-        public async Task<List<ProductVM>> GetAllAsync()
+        public async Task<ServiceResponse> GetAllAsync()
         {
             var products = await _productRepository.Products.ToListAsync();
             var productsVM = _mapper.Map<List<ProductVM>>(products);
-            return productsVM;
+            return new ServiceResponse
+            {
+                IsSuccess = true,
+                Message = "Products loaded",
+                Payload = productsVM
+            };
         }
 
         public async Task<ServiceResponse> RestoreAsync(Guid id)
@@ -145,7 +150,7 @@ namespace Infrastructure.Services.Classes
             };
         }
 
-        public async Task<List<ProductVM>> GetAllByCategoryAsync(string categoryName)
+        public async Task<ServiceResponse> GetAllByCategoryAsync(string categoryName)
         {
             var categoryProducts = _context.CategoryProduct.Where(x => x.Category.Name == categoryName).AsQueryable();
             var products = await categoryProducts.Select(x => new ProductVM
@@ -160,10 +165,15 @@ namespace Infrastructure.Services.Classes
                 {
                     Id = x.CategoryId.ToString(),
                     Name = x.Category.Name
-                })
+                }).ToList()
             }).ToListAsync();
 
-            return products;
+            return new ServiceResponse 
+            {
+                IsSuccess = true,
+                Message = "Products loaded",
+                Payload = products
+            };
         }
     }
 }

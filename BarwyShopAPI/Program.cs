@@ -73,7 +73,7 @@ app.UseCors();
 
 app.UseAuthorization();
 
-var dir = Path.Combine(Directory.GetCurrentDirectory(), "images");
+var dir = Path.Combine(Directory.GetCurrentDirectory(), "Images");
 if (!Directory.Exists(dir))
 {
     Directory.CreateDirectory(dir);
@@ -82,7 +82,7 @@ if (!Directory.Exists(dir))
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(dir),
-    RequestPath = "/images"
+    RequestPath = "/Images"
 });
 
 app.MapControllers();
