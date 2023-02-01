@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using DAL;
 using DAL.Entities;
 using DAL.Repositories.Interfaces;
+using Infrastructure.Models.Category;
 using Infrastructure.Models.Product;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.Validation.Product;
@@ -13,12 +15,14 @@ namespace Infrastructure.Services.Classes
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
+        private readonly AppEFContext _context;
 
-        public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper)
+        public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper, AppEFContext context)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _mapper = mapper;
+            _context = context;
         }
 
         public async Task<ServiceResponse> CreateAsync(ProductCreateVM model)
@@ -143,13 +147,23 @@ namespace Infrastructure.Services.Classes
 
         public async Task<List<ProductVM>> GetAllByCategoryAsync(string categoryName)
         {
-            var categoryProducts = await _productRepository.Products
-                .SelectMany(p => p.CategoryProduct.Where(cp => cp.Category.Name == categoryName))
-                .Include(cp => cp.Product)
-                .ToListAsync();
-            var products = categoryProducts.Select(cp => cp.Product);
-            var productsVM = _mapper.Map<List<ProductVM>>(products);
-            return productsVM;
+            var categoryProducts = _context.CategoryProduct.Where(x => x.Category.Name == categoryName).AsQueryable();
+            var products = await categoryProducts.Select(x => new ProductVM
+            {
+                Id = x.ProductId.ToString(),
+                Name = x.Product.Name,
+                Article = x.Product.Article,
+                Image = x.Product.Image,
+                Size = x.Product.Size,
+                Price = x.Product.Price,
+                Categories = x.Product.CategoryProduct.Select(x => new CategoryVM
+                {
+                    Id = x.CategoryId.ToString(),
+                    Name = x.Category.Name
+                })
+            }).ToListAsync();
+
+            return products;
         }
     }
 }
