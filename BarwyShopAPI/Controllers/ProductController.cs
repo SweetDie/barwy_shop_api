@@ -23,39 +23,39 @@ namespace BarwyShopAPI.Controllers
             return SendResponse(result);
         }
 
-        [HttpGet("getAll")]
-        public async Task<IActionResult> GetAllProductsAsync()
-        {
-            var products = await _productService.GetAllAsync();
-            return SendResponse(products);
-        }
-
         [HttpPost("update")]
-        public async Task<IActionResult> UpdateProductAsync([FromBody] ProductUpdateVM model)
+        public async Task<IActionResult> UpdateAsync([FromBody] ProductUpdateVM model)
         {
-            var products = await _productService.UpdateAsync(model);
-            return Ok(products);
+            var result = await _productService.UpdateAsync(model);
+            return SendResponse(result);
         }
 
         [HttpPost("delete")]
-        public async Task<IActionResult> DeleteProductAsync([FromBody] string id)
+        public async Task<IActionResult> DeleteAsync([FromBody] string id)
         {
             var result = await _productService.DeleteAsync(Guid.Parse(id));
             return SendResponse(result);
         }
 
         [HttpPost("restore")]
-        public async Task<IActionResult> RestoreProductAsync([FromBody] string id)
+        public async Task<IActionResult> RestoreAsync([FromBody] string id)
         {
             var result = await _productService.RestoreAsync(Guid.Parse(id));
+            return SendResponse(result);
+        }
+        
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var result = await _productService.GetAllAsync();
             return SendResponse(result);
         }
 
         [HttpGet("getAllByCategory")]
         public async Task<IActionResult> GetAllByCategoryAsync([FromBody] string categoryName)
         {
-            var products = await _productService.GetAllByCategoryAsync(categoryName);
-            return SendResponse(products);
+            var result = await _productService.GetAllByCategoryAsync(categoryName);
+            return SendResponse(result);
         }
 
         private IActionResult SendResponse(ServiceResponse response)

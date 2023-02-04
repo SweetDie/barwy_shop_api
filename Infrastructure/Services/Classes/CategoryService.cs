@@ -61,26 +61,84 @@ namespace Infrastructure.Services.Classes
             };
         }
 
-        public async Task<List<CategoryVM>> GetAllAsync()
+        public async Task<ServiceResponse> GetAllAsync()
         {
             var categories = await _categoryRepository.Categories.ToListAsync();
             var categoriesVM = _mapper.Map<List<CategoryVM>>(categories);
-            return categoriesVM;
+            return new ServiceResponse
+            {
+                IsSuccess = true,
+                Message = "Categories loaded",
+                Payload = categoriesVM
+            };
         }
 
-        public Task<ServiceResponse> DeleteAsync(Guid id)
+        public async Task<ServiceResponse> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await _categoryRepository.DeleteAsync(id);
+            if (!result)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Не вдалося видалити"
+                };
+            }
+            return new ServiceResponse
+            {
+                IsSuccess = true,
+                Message = "Категорію видалено"
+            };
         }
 
-        public Task<ServiceResponse> RestoreAsync(Guid id)
+        public async Task<ServiceResponse> RestoreAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await _categoryRepository.RestoreAsync(id);
+            if(!result)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Не вдалося відновити"
+                };
+            }
+            return new ServiceResponse
+            {
+                IsSuccess = true,
+                Message = "Категорію відновлено"
+            };
         }
 
-        public Task<ServiceResponse> UpdateAsync(CategoryUpdateVM model)
+        public async Task<ServiceResponse> UpdateAsync(CategoryUpdateVM model)
         {
-            throw new NotImplementedException();
+            var validator = new CategoryUpdateValidation();
+            var validationResult = await validator.ValidateAsync(model);
+            if(!validationResult.IsValid)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Некоректні дані",
+                    Errors = validationResult.Errors.Select(e => e.ErrorMessage)
+                };
+            }
+            var newCategory = _mapper.Map<Category>(model);
+            var result = await _categoryRepository.UpdateAsync(newCategory);
+
+            if (!result)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Не вдалося оновити категорію"
+                };
+            }
+
+            return new ServiceResponse
+            {
+                IsSuccess = true,
+                Message = "Категорію успішно оновлено"
+            };
         }
     }
 }

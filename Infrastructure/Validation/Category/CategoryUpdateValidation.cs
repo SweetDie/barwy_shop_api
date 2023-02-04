@@ -3,9 +3,9 @@ using Infrastructure.Models.Category;
 
 namespace Infrastructure.Validation.Category ;
 
-    public class CategoryCreateValidation : AbstractValidator<CategoryCreateVM>
+    public class CategoryUpdateValidation : AbstractValidator<CategoryUpdateVM>
     {
-        public CategoryCreateValidation()
+        public CategoryUpdateValidation()
         {
             RuleFor(c => c.Name).NotEmpty().NotNull();
         }

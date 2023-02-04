@@ -127,7 +127,7 @@ namespace Infrastructure.Services.Classes
         public async Task<ServiceResponse> UpdateAsync(ProductUpdateVM model)
         {
             var validator = new ProductUpdateValidation();
-            var validationResult = validator.Validate(model);
+            var validationResult = await validator.ValidateAsync(model);
             if(!validationResult.IsValid)
             {
                 return new ServiceResponse

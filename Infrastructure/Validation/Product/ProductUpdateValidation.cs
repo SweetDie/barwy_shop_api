@@ -7,9 +7,9 @@ namespace Infrastructure.Validation.Product
     {
         public ProductUpdateValidation()
         {
-            RuleFor(r => r.Name).NotEmpty();
+            RuleFor(r => r.Name).NotEmpty().NotNull();
             RuleFor(r => r.Price).GreaterThan(0);
-            RuleFor(r => r.Article).NotEmpty();
+            RuleFor(r => r.Article).NotEmpty().NotNull();
         }
     }  
 }

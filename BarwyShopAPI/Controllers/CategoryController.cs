@@ -18,12 +18,40 @@ namespace BarwyShopAPI.Controllers ;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateCategoryAsync([FromBody] CategoryCreateVM model)
+        public async Task<IActionResult> CreateAsync([FromBody] CategoryCreateVM model)
         {
             var result = await _categoryService.CreateAsync(model);
             return SendResponse(result);
         }
+
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateAsync([FromBody] CategoryUpdateVM model)
+        {
+            var result = await _categoryService.UpdateAsync(model);
+            return SendResponse(result);
+        }
         
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteAsync([FromBody] string id)
+        {
+            var result = await _categoryService.DeleteAsync(Guid.Parse(id));
+            return SendResponse(result);
+        }
+        
+        [HttpPost("restore")]
+        public async Task<IActionResult> RestoreAsync([FromBody] string id)
+        {
+            var result = await _categoryService.RestoreAsync(Guid.Parse(id));
+            return SendResponse(result);
+        }
+
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var result = await _categoryService.GetAllAsync();
+            return SendResponse(result);
+        }
+
         private IActionResult SendResponse(ServiceResponse response)
         {
             if (response.IsSuccess)

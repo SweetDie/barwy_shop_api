@@ -26,6 +26,10 @@ namespace Infrastructure.Settings.Mapper
                 .ForMember(
                     dest => dest.DateCreated,
                     opt => opt.MapFrom(src => DateTime.Now.ToUniversalTime()));
+            CreateMap<CategoryUpdateVM, Category>()
+                .ForMember(
+                    dest => dest.NormalizedName,
+                    opt => opt.MapFrom((src => src.Name.ToUpper())));
         }
     }
 }
