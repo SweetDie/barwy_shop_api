@@ -2,10 +2,12 @@
 using DAL;
 using DAL.Entities;
 using DAL.Repositories.Interfaces;
+using Infrastructure.Constants;
 using Infrastructure.Models.Category;
 using Infrastructure.Models.Product;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.Validation.Product;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services.Classes
@@ -40,8 +42,11 @@ namespace Infrastructure.Services.Classes
             }
 
             var newProduct = _mapper.Map<Product>(model);
+            var image = await UploadImageAsync(model.Image);
+            newProduct.Image = image;
 
             var resultCreate = await _productRepository.CreateAsync(newProduct);
+
 
             if(!resultCreate)
              {
@@ -52,7 +57,7 @@ namespace Infrastructure.Services.Classes
                  };
              }
 
-            var resultAddCategory = await _productRepository.AddToCategoryAsync(newProduct, model.Categories.Select(c => c.Name));
+            var resultAddCategory = await _productRepository.AddToCategoryAsync(newProduct, model.Categories);
 
             if (!resultAddCategory)
             {
@@ -153,7 +158,7 @@ namespace Infrastructure.Services.Classes
 
         public async Task<ServiceResponse> GetAllByCategoryAsync(string categoryName)
         {
-            var categoryProducts = _context.CategoryProduct.Where(x => x.Category.Name == categoryName).AsQueryable();
+            var categoryProducts = _context.CategoryProduct.Where(x => x.Category.Name.Contains(categoryName)).AsQueryable();
             var products = await categoryProducts.Select(x => new ProductVM
             {
                 Id = x.ProductId.ToString(),
@@ -177,53 +182,31 @@ namespace Infrastructure.Services.Classes
             };
         }
 
-        public async Task<ServiceResponse> UploadImageAsync(ProductUploadImageVM model)
+        public async Task<string> UploadImageAsync(IFormFile image)
         {
-            var product = await _productRepository.GetByIdAsync(model.ProductId);
-
-            if(product == null)
+            try
             {
-                return new ServiceResponse
+                if (image == null)
                 {
-                    IsSuccess = false,
-                    Message = "Такий продукт більше не існує"
-                };
-            }
+                    return DefaultImages.NotAvailable;
+                }
 
-            if(model.Image == null)
-            {
-                return new ServiceResponse
+                var fileExp = Path.GetExtension(image.FileName);
+                var dir = Path.Combine(Directory.GetCurrentDirectory(), "Images");
+                string fileName = Path.GetRandomFileName() + fileExp;
+
+                using (var stream = File.Create(Path.Combine(dir, fileName)))
                 {
-                    IsSuccess = false,
-                    Message = "Не вдалося завантажити зображення"
-                };
+                    await image.CopyToAsync(stream);
+                }
+
+                return fileName;
             }
-
-            var fileExp = Path.GetExtension(model.Image.FileName);
-            var dir = Path.Combine(Directory.GetCurrentDirectory(), "Images");
-            string fileName = Path.GetRandomFileName() + fileExp;
-
-            using (var stream = File.Create(Path.Combine(dir, fileName)))
+            catch (Exception)
             {
-                await model.Image.CopyToAsync(stream);
+
+                return DefaultImages.NotAvailable;
             }
-
-            product.Image = fileName;
-            var resultUpdate = await _productRepository.UpdateAsync(product);
-            if(!resultUpdate)
-            {
-                return new ServiceResponse
-                {
-                    IsSuccess = false,
-                    Message = "Не вдалося завантажити зображення"
-                };
-            }
-
-            return new ServiceResponse
-            {
-                IsSuccess = true,
-                Message = "Зображення успішно завантажено"
-            };
         }
     }
 }

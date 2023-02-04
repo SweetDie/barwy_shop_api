@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Models.Product;
+using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Services.Interfaces
 {
@@ -10,6 +11,6 @@ namespace Infrastructure.Services.Interfaces
         Task<ServiceResponse> RestoreAsync(Guid id);
         Task<ServiceResponse> UpdateAsync(ProductUpdateVM model);
         Task<ServiceResponse> GetAllByCategoryAsync(string categoryName);
-        Task<ServiceResponse> UploadImageAsync(ProductUploadImageVM model);
+        Task<string> UploadImageAsync(IFormFile image);
     }
 }

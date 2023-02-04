@@ -17,16 +17,9 @@ namespace BarwyShopAPI.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateAsync([FromBody] ProductCreateVM model)
+        public async Task<IActionResult> CreateAsync([FromForm] ProductCreateVM model)
         {
             var result = await _productService.CreateAsync(model);
-            return SendResponse(result);
-        }
-
-        [HttpPost("uploadImage")]
-        public async Task<IActionResult> UploadImageAsync([FromForm] ProductUploadImageVM model)
-        {
-            var result = await _productService.UploadImageAsync(model);
             return SendResponse(result);
         }
 

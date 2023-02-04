@@ -9,7 +9,8 @@ namespace Infrastructure.Models.Product
         public string Article { get; set; }
         public decimal Price { get; set; }
         public string Size { get; set; }
+        public IFormFile Image { get; set; }
 
-        public virtual ICollection<CategoryCreateVM> Categories { get; set; }
+        public virtual ICollection<string> Categories { get; set; }
     }
 }
