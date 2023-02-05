@@ -42,8 +42,8 @@ namespace Infrastructure.Services.Classes
             }
 
             var newProduct = _mapper.Map<Product>(model);
-            var image = await UploadImageAsync(model.Image);
-            newProduct.Image = image;
+            var imageName = await UploadImageAsync(model.Image);
+            newProduct.Image = imageName;
 
             var resultCreate = await _productRepository.CreateAsync(newProduct);
 
@@ -57,16 +57,16 @@ namespace Infrastructure.Services.Classes
                  };
              }
 
-            var resultAddCategory = await _productRepository.AddToCategoryAsync(newProduct, model.Categories);
+            //var resultAddCategory = await _productRepository.AddToCategoryAsync(newProduct, model.Categories);
 
-            if (!resultAddCategory)
-            {
-                return new ServiceResponse
-                {
-                    IsSuccess = false,
-                    Message = "Помилка при створенні товару"
-                };
-            }
+            //if (!resultAddCategory)
+            //{
+            //    return new ServiceResponse
+            //    {
+            //        IsSuccess = false,
+            //        Message = "Помилка при створенні товару"
+            //    };
+            //}
             
             return new ServiceResponse
             {
@@ -186,7 +186,7 @@ namespace Infrastructure.Services.Classes
         {
             try
             {
-                if (image == null)
+                if (image == null || image.FileName == "blob")
                 {
                     return DefaultImages.NotAvailable;
                 }

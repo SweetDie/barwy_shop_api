@@ -11,6 +11,5 @@ namespace Infrastructure.Services.Interfaces
         Task<ServiceResponse> RestoreAsync(Guid id);
         Task<ServiceResponse> UpdateAsync(ProductUpdateVM model);
         Task<ServiceResponse> GetAllByCategoryAsync(string categoryName);
-        Task<string> UploadImageAsync(IFormFile image);
     }
 }
