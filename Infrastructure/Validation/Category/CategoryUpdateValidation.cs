@@ -3,7 +3,7 @@ using Infrastructure.Models.Category;
 
 namespace Infrastructure.Validation.Category ;
 
-    public class CategoryUpdateValidation : AbstractValidator<CategoryUpdateVM>
+    public class CategoryUpdateValidation : AbstractValidator<CategoryUpdateVm>
     {
         public CategoryUpdateValidation()
         {

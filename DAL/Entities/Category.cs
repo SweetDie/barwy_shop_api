@@ -1,17 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 
 namespace DAL.Entities
 {
     [Index(nameof(Name), IsUnique = true)]
-    public class Category : BaseEntity<Guid>
+    public sealed class Category : BaseEntity<Guid>
     {
-        [Required, StringLength(255)]
+        [Required, MaxLength(255)]
         public string Name { get; set; }
-
+        [Required, MaxLength(255)]
         public string NormalizedName { get; set; }
 
-        public virtual ICollection<CategoryProduct> CategoryProduct { get; set; }
+        public ICollection<CategoryProduct> CategoryProduct { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace DAL.Repositories.Classes
     {
         private readonly AppEFContext _dbContext;
 
-        public GenericRepository(AppEFContext dbContext)
+        protected GenericRepository(AppEFContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -23,13 +23,10 @@ namespace DAL.Repositories.Classes
         public async Task<bool> DeleteAsync(T id)
         {
             var entity = await GetByIdAsync(id);
-            if (entity != null)
-            {
-                entity.IsDelete = true;
-                var result = await UpdateAsync(entity);
-                return result;
-            }
-            return false;
+            if (entity == null) return false;
+            entity.IsDelete = true;
+            var result = await UpdateAsync(entity);
+            return result;
         }
 
         public IQueryable<TEntity> GetAll()
@@ -47,13 +44,10 @@ namespace DAL.Repositories.Classes
         public async Task<bool> RestoreAsync(T id)
         {
             var entity = await GetByIdAsync(id);
-            if (entity != null)
-            {
-                entity.IsDelete = false;
-                var result = await UpdateAsync(entity);
-                return result;
-            }
-            return false;
+            if (entity == null) return false;
+            entity.IsDelete = false;
+            var result = await UpdateAsync(entity);
+            return result;
         }
 
         public async Task<bool> UpdateAsync(TEntity entity)

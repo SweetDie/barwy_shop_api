@@ -8,16 +8,17 @@ namespace Infrastructure.Settings.Mapper
     {
         public AutoMapperProductProfile()
         {
-            CreateMap<Product, ProductVM>()
+            CreateMap<Product, ProductVm>()
                 .ForMember(
-                pvm => pvm.Categories,
-                opt => opt.MapFrom(p => p.CategoryProduct));
-            CreateMap<ProductVM, Product>();
-            CreateMap<ProductCreateVM, Product>()
+                dest => dest.Categories,
+                opt => opt.MapFrom(src => src.CategoryProduct))
                 .ForMember(
-                    dest => dest.DateCreated,
-                    opt => opt.MapFrom(src => DateTime.Now.ToUniversalTime()));
-            CreateMap<ProductUpdateVM, Product>();
+                    dest => dest.Image,
+                    opt => opt.MapFrom(src => src.Image.FullName));
+            CreateMap<ProductCreateVm, Product>()
+                .ForMember(dest => dest.Image,
+                    opt => opt.Ignore());
+            CreateMap<ProductUpdateVm, Product>();
         }
     }
 }

@@ -7,6 +7,6 @@ namespace Infrastructure.Services.Interfaces
     public interface IJwtTokenService
     {
         Task<string> CreateToken(UserEntity user);
-        Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalLoginVM request);
+        Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalLoginVm request);
     }
 }

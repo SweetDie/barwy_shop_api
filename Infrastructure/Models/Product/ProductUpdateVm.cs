@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Models.Product
 {
-    public class ProductUpdateVM
+    public class ProductUpdateVm
     {
         public string Id { get; set; }
         public string Name { get; set; }

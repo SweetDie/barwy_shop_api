@@ -1,8 +1,9 @@
 ﻿namespace Infrastructure.Constants
 {
-    public class ImagesConstants
+    public static class ImagesConstants
     {
+        public const string ImagesFolder = "Images";
         public const string ProductImageFolder = "Product";
-        public const string ProductWithoutImage = "notAvailable.jpg";
+        public const string ProductDefaultImage = "notAvailable.jpg";
     }
 }

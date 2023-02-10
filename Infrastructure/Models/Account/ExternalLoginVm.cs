@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Models.Account
 {
-    public class ExternalLoginVM
+    public class ExternalLoginVm
     {
         public string Provider { get; set; }
         public string Token { get; set; }

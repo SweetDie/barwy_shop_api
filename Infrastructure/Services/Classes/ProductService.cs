@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using DAL;
 using DAL.Entities;
+using DAL.Entities.Image;
 using DAL.Repositories.Interfaces;
 using Infrastructure.Constants;
 using Infrastructure.Models.Category;
 using Infrastructure.Models.Product;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.Validation.Product;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services.Classes
@@ -15,21 +15,19 @@ namespace Infrastructure.Services.Classes
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
-        private readonly ICategoryRepository _categoryRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
         private readonly AppEFContext _context;
 
-        public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper, AppEFContext context, IFileService fileService)
+        public ProductService(IProductRepository productRepository, IMapper mapper, AppEFContext context, IFileService fileService)
         {
             _productRepository = productRepository;
-            _categoryRepository = categoryRepository;
             _mapper = mapper;
             _context = context;
             _fileService = fileService;
         }
 
-        public async Task<ServiceResponse> CreateAsync(ProductCreateVM model)
+        public async Task<ServiceResponse> CreateAsync(ProductCreateVm model)
         {
             var validator = new ProductCreateValidation();
             var validationResult = await validator.ValidateAsync(model);
@@ -47,11 +45,18 @@ namespace Infrastructure.Services.Classes
 
             if (model.Image == null || model.Image.FileName == "blob")
             {
-                newProduct.Image = ImagesConstants.ProductWithoutImage;
+                const string fileName = ImagesConstants.ProductDefaultImage;
+                var path = Path.Combine(ImagesConstants.ImagesFolder, ImagesConstants.ProductImageFolder);
+                newProduct.Image = new ProductImage
+                {
+                    FileName = fileName,
+                    Path = path,
+                    FullName = Path.Combine(path, fileName)
+                };
             }
             else
             {
-                newProduct.Image = await _fileService.UploadImageAsync(model.Image, ImagesConstants.ProductImageFolder);
+                newProduct.Image = (ProductImage)await _fileService.UploadImageAsync(model.Image, ImagesConstants.ProductImageFolder);
             }
 
             var resultCreate = await _productRepository.CreateAsync(newProduct);
@@ -65,9 +70,9 @@ namespace Infrastructure.Services.Classes
                  };
              }
 
-            bool resultAddCategory = true;
+            bool resultAddCategory;
 
-            if (model.Categories.Count() > 0)
+            if (model.Categories.Any())
             {
                 resultAddCategory = await _productRepository.AddToCategoryAsync(newProduct, model.Categories);
             }
@@ -95,12 +100,12 @@ namespace Infrastructure.Services.Classes
         public async Task<ServiceResponse> GetAllAsync()
         {
             var products = await _productRepository.Products.ToListAsync();
-            var productsVM = _mapper.Map<List<ProductVM>>(products);
+            var productsVm = _mapper.Map<List<ProductVm>>(products);
             return new ServiceResponse
             {
                 IsSuccess = true,
                 Message = "Products loaded",
-                Payload = productsVM
+                Payload = productsVm
             };
         }
 
@@ -140,7 +145,7 @@ namespace Infrastructure.Services.Classes
             };
         }
 
-        public async Task<ServiceResponse> UpdateAsync(ProductUpdateVM model)
+        public async Task<ServiceResponse> UpdateAsync(ProductUpdateVm model)
         {
             var validator = new ProductUpdateValidation();
             var validationResult = await validator.ValidateAsync(model);
@@ -175,18 +180,18 @@ namespace Infrastructure.Services.Classes
         public async Task<ServiceResponse> GetAllByCategoryAsync(string categoryName)
         {
             var categoryProducts = _context.CategoryProduct.Where(x => x.Category.Name.Contains(categoryName)).AsQueryable();
-            var products = await categoryProducts.Select(x => new ProductVM
+            var products = await categoryProducts.Select(x => new ProductVm
             {
                 Id = x.ProductId.ToString(),
                 Name = x.Product.Name,
                 Article = x.Product.Article,
-                Image = x.Product.Image,
+                Image = x.Product.Image.FullName,
                 Size = x.Product.Size,
                 Price = x.Product.Price,
-                Categories = x.Product.CategoryProduct.Select(x => new CategoryVM
+                Categories = x.Product.CategoryProduct.Select(categoryProduct => new CategoryVm
                 {
-                    Id = x.CategoryId.ToString(),
-                    Name = x.Category.Name
+                    Id = categoryProduct.CategoryId.ToString(),
+                    Name = categoryProduct.Category.Name
                 }).ToList()
             }).ToListAsync();
 

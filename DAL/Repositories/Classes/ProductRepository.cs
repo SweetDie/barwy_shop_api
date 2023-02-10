@@ -18,6 +18,7 @@ namespace DAL.Repositories.Classes
             .Where(p => p.IsDelete == false)
             .Include(p => p.CategoryProduct)
             .ThenInclude(cp => cp.Category);
+            //.Include(p => p.Image);
 
         public async Task<bool> AddToCategoryAsync(Product product, string categoryName)
         {
@@ -38,19 +39,17 @@ namespace DAL.Repositories.Classes
         
         public async Task<bool> AddToCategoryAsync(Product product, IEnumerable<string> categories)
         {
-            if(categories.Count() > 0)
+            var enumerable = categories.ToList();
+            if (!enumerable.Any()) return false;
+            foreach (var category in enumerable)
             {
-                foreach (var category in categories)
+                var result = await AddToCategoryAsync(product: product, categoryName: category);
+                if (!result)
                 {
-                    var result = await AddToCategoryAsync(product: product, categoryName: category);
-                    if (!result)
-                    {
-                        return false;
-                    }
-                }
-                return true;
+                    return false;
+                } 
             }
-            return false;
+            return true;
         }
     }
 }

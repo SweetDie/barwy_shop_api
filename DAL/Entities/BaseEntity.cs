@@ -7,13 +7,15 @@ namespace DAL.Entities
         T Id { get; set; }
         bool IsDelete { get; set; }
         DateTime DateCreated { get; set; }
+        DateTime DateModified { get; set; }
     }
 
     public abstract class BaseEntity<T> : IEntity<T>
     {
         [Key]
         public T Id { get; set; }
-        public bool IsDelete { get; set; }
-        public DateTime DateCreated { get; set; }
+        public bool IsDelete { get; set; } = false;
+        public DateTime DateCreated { get; set; } = DateTime.Now.ToUniversalTime();
+        public DateTime DateModified { get; set; } = DateTime.Now.ToUniversalTime();
     }
 }

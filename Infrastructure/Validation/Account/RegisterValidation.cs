@@ -3,7 +3,7 @@ using Infrastructure.Models.Account;
 
 namespace Infrastructure.Validation.Account
 {
-    public class RegisterValidation : AbstractValidator<RegisterVM>
+    public class RegisterValidation : AbstractValidator<RegisterVm>
     {
         public RegisterValidation()
         {

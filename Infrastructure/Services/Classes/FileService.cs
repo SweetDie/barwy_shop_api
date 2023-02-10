@@ -1,4 +1,5 @@
-﻿using Infrastructure.Constants;
+﻿using DAL.Entities.Image;
+using Infrastructure.Constants;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -6,26 +7,31 @@ namespace Infrastructure.Services.Classes
 {
     public class FileService : IFileService
     {
-        public async Task<string> UploadImageAsync(IFormFile image, string innerFolder = "")
+        public async Task<BaseImage> UploadImageAsync(IFormFile image, string innerFolder = "")
         {
             try
             {
-                var fileExp = Path.GetExtension(image.FileName);
-                var dir = Path.Combine(Directory.GetCurrentDirectory(), "Images", innerFolder);
-                string fileName = Path.GetRandomFileName() + fileExp;
-                string path = Path.Combine(dir, fileName);
+                var fileExt = Path.GetExtension(image.FileName);
+                var fileName = Path.GetRandomFileName() + fileExt;
+                var dir = Path.Combine(ImagesConstants.ImagesFolder, innerFolder);
+                var fullName = Path.Combine(dir, fileName);
+                var path = Path.Combine(Directory.GetCurrentDirectory(), fullName);
 
-                using (var stream = File.Create(path))
+                await using (var stream = File.Create(path))
                 {
                     await image.CopyToAsync(stream);
                 }
 
-                return Path.Combine(innerFolder, fileName);
+                return new ProductImage
+                {
+                    FileName = fileName,
+                    Path = dir,
+                    FullName = fullName
+                };
             }
             catch (Exception)
             {
-
-                return ImagesConstants.ProductWithoutImage;
+                return null;
             }
         }
     }

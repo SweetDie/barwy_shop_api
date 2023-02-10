@@ -1,20 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DAL.Entities.Image;
 
 namespace DAL.Entities
 {
-    public class Product : BaseEntity<Guid>
+    public sealed class Product : BaseEntity<Guid>
     {
-        [Required, StringLength(255)]
+        [Required, MaxLength(255)]
         public string Name { get; set; }
-        [StringLength(255)]
-        public string Image { get; set; }
-        [StringLength(20)]
+        [MaxLength(20)]
         public string Article { get; set; }
         public decimal Price { get; set; }
-        [StringLength(20)]
+        [MaxLength(20)]
         public string Size { get; set; }
-
-        public virtual ICollection<CategoryProduct> CategoryProduct { get; set; }
+        
+        public Guid ImageId { get; set; }
+        public ProductImage Image { get; set; }
+        public ICollection<CategoryProduct> CategoryProduct { get; set; }
     }
 }

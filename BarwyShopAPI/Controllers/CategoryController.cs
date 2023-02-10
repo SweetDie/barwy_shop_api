@@ -18,14 +18,14 @@ namespace BarwyShopAPI.Controllers;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateAsync([FromBody] CategoryCreateVM model)
+        public async Task<IActionResult> CreateAsync([FromBody] CategoryCreateVm model)
         {
             var result = await _categoryService.CreateAsync(model);
             return SendResponse(result);
         }
 
         [HttpPost("update")]
-        public async Task<IActionResult> UpdateAsync([FromBody] CategoryUpdateVM model)
+        public async Task<IActionResult> UpdateAsync([FromBody] CategoryUpdateVm model)
         {
             var result = await _categoryService.UpdateAsync(model);
             return SendResponse(result);

@@ -3,7 +3,7 @@ using Infrastructure.Models.Account;
 
 namespace Infrastructure.Validation.Account
 {
-    public class ExternalLoginValidation : AbstractValidator<ExternalLoginVM>
+    public class ExternalLoginValidation : AbstractValidator<ExternalLoginVm>
     {
         public ExternalLoginValidation()
         {

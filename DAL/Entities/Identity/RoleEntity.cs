@@ -2,8 +2,8 @@
 
 namespace DAL.Entities.Identity
 {
-    public class RoleEntity : IdentityRole
+    public sealed class RoleEntity : IdentityRole
     {
-        public virtual ICollection<UserRoleEntity> UserRoles { get; set; }
+        public ICollection<UserRoleEntity> UserRoles { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace Infrastructure.Services.Classes
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse> CreateAsync(CategoryCreateVM model)
+        public async Task<ServiceResponse> CreateAsync(CategoryCreateVm model)
         {
             var validator = new CategoryCreateValidation();
             var validationResult = validator.Validate(model);
@@ -64,12 +64,12 @@ namespace Infrastructure.Services.Classes
         public async Task<ServiceResponse> GetAllAsync()
         {
             var categories = await _categoryRepository.Categories.ToListAsync();
-            var categoriesVM = _mapper.Map<List<CategoryVM>>(categories);
+            var categoriesVm = _mapper.Map<List<CategoryVm>>(categories);
             return new ServiceResponse
             {
                 IsSuccess = true,
                 Message = "Categories loaded",
-                Payload = categoriesVM
+                Payload = categoriesVm
             };
         }
 
@@ -109,7 +109,7 @@ namespace Infrastructure.Services.Classes
             };
         }
 
-        public async Task<ServiceResponse> UpdateAsync(CategoryUpdateVM model)
+        public async Task<ServiceResponse> UpdateAsync(CategoryUpdateVm model)
         {
             var validator = new CategoryUpdateValidation();
             var validationResult = await validator.ValidateAsync(model);

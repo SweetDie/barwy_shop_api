@@ -1,5 +1,6 @@
 ﻿using DAL.Entities;
 using DAL.Entities.Identity;
+using DAL.Entities.Image;
 using DAL.Repositories.Interfaces;
 using Infrastructure.Constants;
 using Microsoft.AspNetCore.Identity;
@@ -39,7 +40,8 @@ namespace BarwyShopAPI
                         Email = adminEmail,   
                         UserName = adminEmail,
                         FirstName = "Admin",  
-                        LastName = "Admin"    
+                        LastName = "Admin",
+                        
                     };
                     await userManager.CreateAsync(admin, "123456");
                     await userManager.AddToRoleAsync(admin, Roles.Admin);
@@ -61,38 +63,40 @@ namespace BarwyShopAPI
                     var category = new Category
                     {
                         Name = "Патріотичні",
-                        NormalizedName = "Патріотичні".ToUpper(),
-                        DateCreated = DateTime.Now.ToUniversalTime()
+                        NormalizedName = "Патріотичні".ToUpper()
                     };
                     await categoryRepository.CreateAsync(category);
 
                     category = new Category
                     {
                         Name = "Пейзажі",
-                        NormalizedName = "Пейзажі".ToUpper(),
-                        DateCreated = DateTime.Now.ToUniversalTime()
+                        NormalizedName = "Пейзажі".ToUpper()
                     };
                     await categoryRepository.CreateAsync(category);
 
                     category = new Category
                     {
                         Name = "Uncategorized",
-                        NormalizedName = "Uncategorized".ToUpper(),
-                        DateCreated = DateTime.Now.ToUniversalTime()
+                        NormalizedName = "Uncategorized".ToUpper()
                     };
                     await categoryRepository.CreateAsync(category);
                 }
 
                 if (!productRepository.Products.Any())
                 {
+                    var productImagePath = Path.Combine(ImagesConstants.ImagesFolder, ImagesConstants.ProductImageFolder);
                     var product = new Product
                     {
                         Name = "Все буде Україна",
-                        DateCreated = DateTime.Now.ToUniversalTime(),
                         Price = 245,
                         Size = "40x50",
                         Article = "0049Т1",
-                        Image = "Product/5jghk0xy.iff.jpg"
+                        Image = new ProductImage
+                        {
+                            FileName = "5jghk0xy.iff.jpg",
+                            Path = productImagePath,
+                            FullName = Path.Combine(productImagePath, "5jghk0xy.iff.jpg")
+                        }
                     };
                     await productRepository.CreateAsync(product);
                     await productRepository.AddToCategoryAsync(product, "Патріотичні");
@@ -100,11 +104,15 @@ namespace BarwyShopAPI
                     product = new Product
                     {
                         Name = "Тризуб",
-                        DateCreated = DateTime.Now.ToUniversalTime(),
                         Price = 245,
                         Size = "40x50",
                         Article = "0070П1",
-                        Image = "Product/j2iosauv.nv4.jpg"
+                        Image = new ProductImage
+                        {
+                            FileName = "j2iosauv.nv4.jpg",
+                            Path = productImagePath,
+                            FullName = Path.Combine(productImagePath, "j2iosauv.nv4.jpg")
+                        }
                     };
                     await productRepository.CreateAsync(product);
                     await productRepository.AddToCategoryAsync(product, "Патріотичні");

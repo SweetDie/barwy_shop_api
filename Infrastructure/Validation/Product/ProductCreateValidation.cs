@@ -3,7 +3,7 @@ using Infrastructure.Models.Product;
 
 namespace Infrastructure.Validation.Product
 {
-    public class ProductCreateValidation : AbstractValidator<ProductCreateVM>
+    public class ProductCreateValidation : AbstractValidator<ProductCreateVm>
     {
         public ProductCreateValidation()
         {

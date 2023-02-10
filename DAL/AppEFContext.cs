@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using DAL.Entities.Image;
 
 namespace DAL
 {
@@ -18,38 +19,39 @@ namespace DAL
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet <CategoryProduct> CategoryProduct { get; set; }
+        public DbSet<CategoryProduct> CategoryProduct { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<UserRoleEntity>(us =>
-            {
-                us.HasKey(u => new { u.UserId, u.RoleId });
-
-                us.HasOne(ur => ur.Role)
-                    .WithMany(r => r.UserRoles)
-                    .HasForeignKey(r => r.RoleId)
-                    .IsRequired();
-
-                us.HasOne(ur => ur.User)
-                    .WithMany(r => r.UserRoles)
-                    .HasForeignKey(r => r.UserId)
-                    .IsRequired();
-            });
+            builder.Entity<UserRoleEntity>()
+                .HasKey(ur => new { ur.UserId, ur.RoleId });
+            builder.Entity<UserRoleEntity>()
+                .HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId);
+            builder.Entity<UserRoleEntity>()
+                .HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserId);
 
             builder.Entity<CategoryProduct>()
                 .HasKey(cp => new { cp.CategoryId, cp.ProductId });
             builder.Entity<CategoryProduct>()
                 .HasOne(cp => cp.Product)
-                .WithMany(c => c.CategoryProduct)
+                .WithMany(p => p.CategoryProduct)
                 .HasForeignKey(cp => cp.ProductId);
             builder.Entity<CategoryProduct>()
                 .HasOne(cp => cp.Category)
                 .WithMany(c => c.CategoryProduct)
                 .HasForeignKey(cp => cp.CategoryId);
 
+            builder.Entity<Product>()
+                .HasOne(p => p.Image)
+                .WithOne(i => i.Product)
+                .HasForeignKey<Product>(p => p.ImageId);
         }
     }
 }

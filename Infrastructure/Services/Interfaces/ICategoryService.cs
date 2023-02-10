@@ -5,10 +5,10 @@ namespace Infrastructure.Services.Interfaces
 {
     public interface ICategoryService
     {
-        Task<ServiceResponse> CreateAsync(CategoryCreateVM model);
+        Task<ServiceResponse> CreateAsync(CategoryCreateVm model);
         Task<ServiceResponse> GetAllAsync();
         Task<ServiceResponse> DeleteAsync(Guid id);
         Task<ServiceResponse> RestoreAsync(Guid id);
-        Task<ServiceResponse> UpdateAsync(CategoryUpdateVM model);
+        Task<ServiceResponse> UpdateAsync(CategoryUpdateVm model);
     }
 }

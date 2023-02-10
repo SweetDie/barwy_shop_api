@@ -4,8 +4,8 @@ namespace Infrastructure.Services.Interfaces
 {
     public interface IAccountService
     {
-        public Task<ServiceResponse> LoginAsync(LoginVM model);
-        public Task<ServiceResponse> ExternalLoginAsync(ExternalLoginVM model);
-        public Task<ServiceResponse> RegisterAsync(RegisterVM model);
+        public Task<ServiceResponse> LoginAsync(LoginVm model);
+        public Task<ServiceResponse> ExternalLoginAsync(ExternalLoginVm model);
+        public Task<ServiceResponse> RegisterAsync(RegisterVm model);
     }
 }

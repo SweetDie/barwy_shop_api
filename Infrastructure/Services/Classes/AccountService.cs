@@ -18,7 +18,7 @@ namespace Infrastructure.Services.Classes
             _jwtTokenService = jwtTokenService;
         }
 
-        public async Task<ServiceResponse> ExternalLoginAsync(ExternalLoginVM model)
+        public async Task<ServiceResponse> ExternalLoginAsync(ExternalLoginVm model)
         {
             var validator = new ExternalLoginValidation();
             var validationResult = await validator.ValidateAsync(model);
@@ -73,19 +73,18 @@ namespace Infrastructure.Services.Classes
                         }
                     }
 
-                    var resultLOgin = await _userManager.AddLoginAsync(user, info);
+                    var resultLogin = await _userManager.AddLoginAsync(user, info);
 
-                    if (!resultLOgin.Succeeded)
+                    if (!resultLogin.Succeeded)
                     {
                         return new ServiceResponse
                         {
                             IsSuccess = false,
                             Message = "Створення входу через гугл"
                         };
-
                     }
                 }
-                string token = await _jwtTokenService.CreateToken(user);
+                var token = await _jwtTokenService.CreateToken(user);
                 return new ServiceResponse
                 {
                     IsSuccess = true,
@@ -103,7 +102,7 @@ namespace Infrastructure.Services.Classes
             }
         }
 
-        public async Task<ServiceResponse> LoginAsync(LoginVM model)
+        public async Task<ServiceResponse> LoginAsync(LoginVm model)
         {
             var validator = new LoginValidation();
             var validationResult = await validator.ValidateAsync(model);
@@ -135,7 +134,7 @@ namespace Infrastructure.Services.Classes
                     Message = "Дані вказано не вірно"
                 };
             }
-            string token = await _jwtTokenService.CreateToken(user);
+            var token = await _jwtTokenService.CreateToken(user);
             return new ServiceResponse
             {
                 IsSuccess = true,
@@ -144,7 +143,7 @@ namespace Infrastructure.Services.Classes
             };
         }
 
-        public async Task<ServiceResponse> RegisterAsync(RegisterVM model)
+        public async Task<ServiceResponse> RegisterAsync(RegisterVm model)
         {
             var validator = new RegisterValidation();
             var validationResult = await validator.ValidateAsync(model);
@@ -179,7 +178,7 @@ namespace Infrastructure.Services.Classes
             var resultCreate = await _userManager.CreateAsync(newUser, model.Password);
             if (!resultCreate.Succeeded)
             {
-                new ServiceResponse
+                return new ServiceResponse
                 {
                     IsSuccess = false,
                     Message = "Помилка реєстрації",
@@ -189,7 +188,7 @@ namespace Infrastructure.Services.Classes
             var resultRole = await _userManager.AddToRoleAsync(newUser, Roles.User);
             if (!resultRole.Succeeded)
             {
-                new ServiceResponse
+                return new ServiceResponse
                 {
                     IsSuccess = false,
                     Message = "Помилка реєстрації",

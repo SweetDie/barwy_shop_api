@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Models.Account
 {
-    public class LoginVM
+    public class LoginVm
     {
         public string Email { get; set; }
         public string Password { get; set; }

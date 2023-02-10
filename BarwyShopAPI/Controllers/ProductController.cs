@@ -17,14 +17,14 @@ namespace BarwyShopAPI.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateAsync([FromForm] ProductCreateVM model)
+        public async Task<IActionResult> CreateAsync([FromForm] ProductCreateVm model)
         {
             var result = await _productService.CreateAsync(model);
             return SendResponse(result);
         }
 
         [HttpPost("update")]
-        public async Task<IActionResult> UpdateAsync([FromBody] ProductUpdateVM model)
+        public async Task<IActionResult> UpdateAsync([FromBody] ProductUpdateVm model)
         {
             var result = await _productService.UpdateAsync(model);
             return SendResponse(result);

@@ -3,6 +3,7 @@ using DAL;
 using DAL.Entities.Identity;
 using DAL.Repositories.Classes;
 using DAL.Repositories.Interfaces;
+using Infrastructure.Constants;
 using Infrastructure.Services.Classes;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.Settings;
@@ -74,7 +75,7 @@ app.UseCors();
 
 app.UseAuthorization();
 
-var dir = Path.Combine(Directory.GetCurrentDirectory(), "Images");
+var dir = Path.Combine(Directory.GetCurrentDirectory(), ImagesConstants.ImagesFolder);
 if (!Directory.Exists(dir))
 {
     Directory.CreateDirectory(dir);
@@ -83,7 +84,7 @@ if (!Directory.Exists(dir))
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(dir),
-    RequestPath = "/Images"
+    RequestPath = "/" + ImagesConstants.ImagesFolder
 });
 
 app.MapControllers();

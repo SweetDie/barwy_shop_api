@@ -30,13 +30,12 @@ namespace Infrastructure.Services.Classes
         public async Task<string> CreateToken(UserEntity user)
         {
             var roles = await _userManager.GetRolesAsync(user);
-            List<Claim> claims = new List<Claim>()
+            var claims = new List<Claim>()
             {
                 new Claim("name", user.UserName)
             };
-
-            foreach (var role in roles)
-                claims.Add(new Claim("roles", role));
+            
+            claims.AddRange(roles.Select(role => new Claim("roles", role)));
 
             var key = _configuration.GetValue<string>("JwtKey");
             var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
@@ -51,12 +50,12 @@ namespace Infrastructure.Services.Classes
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
-        public async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalLoginVM request)
+        public async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalLoginVm request)
         {
-            string clientID = _googleAuthSettings.ClientId;
+            var clientId = _googleAuthSettings.ClientId;
             var settings = new GoogleJsonWebSignature.ValidationSettings()
             {
-                Audience = new List<string>() { clientID }
+                Audience = new List<string>() { clientId }
             };
 
             var payload = await GoogleJsonWebSignature.ValidateAsync(request.Token, settings);
