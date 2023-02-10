@@ -92,7 +92,7 @@ namespace BarwyShopAPI
                         Price = 245,
                         Size = "40x50",
                         Article = "0049Т1",
-                        Image = "5jghk0xy.iff.jpg"
+                        Image = "Product/5jghk0xy.iff.jpg"
                     };
                     await productRepository.CreateAsync(product);
                     await productRepository.AddToCategoryAsync(product, "Патріотичні");
@@ -104,7 +104,7 @@ namespace BarwyShopAPI
                         Price = 245,
                         Size = "40x50",
                         Article = "0070П1",
-                        Image = "j2iosauv.nv4.jpg"
+                        Image = "Product/j2iosauv.nv4.jpg"
                     };
                     await productRepository.CreateAsync(product);
                     await productRepository.AddToCategoryAsync(product, "Патріотичні");

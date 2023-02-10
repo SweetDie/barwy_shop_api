@@ -16,15 +16,17 @@ namespace Infrastructure.Services.Classes
     {
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IFileService _fileService;
         private readonly IMapper _mapper;
         private readonly AppEFContext _context;
 
-        public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper, AppEFContext context)
+        public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper, AppEFContext context, IFileService fileService)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _mapper = mapper;
             _context = context;
+            _fileService = fileService;
         }
 
         public async Task<ServiceResponse> CreateAsync(ProductCreateVM model)
@@ -42,8 +44,15 @@ namespace Infrastructure.Services.Classes
             }
 
             var newProduct = _mapper.Map<Product>(model);
-            var imageName = await UploadImageAsync(model.Image);
-            newProduct.Image = imageName;
+
+            if (model.Image == null || model.Image.FileName == "blob")
+            {
+                newProduct.Image = ImagesConstants.ProductWithoutImage;
+            }
+            else
+            {
+                newProduct.Image = await _fileService.UploadImageAsync(model.Image, ImagesConstants.ProductImageFolder);
+            }
 
             var resultCreate = await _productRepository.CreateAsync(newProduct);
 
@@ -79,8 +88,7 @@ namespace Infrastructure.Services.Classes
             return new ServiceResponse
             {
                 IsSuccess = true,
-                Message = "Товар успішно створено",
-                Payload = newProduct
+                Message = "Товар успішно створено"
             };
         }
 
@@ -188,33 +196,6 @@ namespace Infrastructure.Services.Classes
                 Message = "Products loaded",
                 Payload = products
             };
-        }
-
-        public async Task<string> UploadImageAsync(IFormFile image)
-        {
-            try
-            {
-                if (image == null || image.FileName == "blob")
-                {
-                    return DefaultImages.NotAvailable;
-                }
-
-                var fileExp = Path.GetExtension(image.FileName);
-                var dir = Path.Combine(Directory.GetCurrentDirectory(), "Images");
-                string fileName = Path.GetRandomFileName() + fileExp;
-
-                using (var stream = File.Create(Path.Combine(dir, fileName)))
-                {
-                    await image.CopyToAsync(stream);
-                }
-
-                return fileName;
-            }
-            catch (Exception)
-            {
-
-                return DefaultImages.NotAvailable;
-            }
         }
     }
 }

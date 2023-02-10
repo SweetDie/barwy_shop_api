@@ -9,16 +9,12 @@
   <ItemGroup>
     <Compile Remove="Images\Account\**" />
     <Compile Remove="Images\Category\**" />
-    <Compile Remove="Images\Product\**" />
     <Content Remove="Images\Account\**" />
     <Content Remove="Images\Category\**" />
-    <Content Remove="Images\Product\**" />
     <EmbeddedResource Remove="Images\Account\**" />
     <EmbeddedResource Remove="Images\Category\**" />
-    <EmbeddedResource Remove="Images\Product\**" />
     <None Remove="Images\Account\**" />
     <None Remove="Images\Category\**" />
-    <None Remove="Images\Product\**" />
   </ItemGroup>
 
   <ItemGroup>
