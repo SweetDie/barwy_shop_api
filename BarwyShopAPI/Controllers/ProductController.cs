@@ -1,5 +1,5 @@
-﻿using Infrastructure;
-using Infrastructure.Models.Product;
+﻿using Infrastructure.Models.Product;
+using Infrastructure.Services;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,7 +52,7 @@ namespace BarwyShopAPI.Controllers
         }
 
         [HttpGet("getAllByCategory")]
-        public async Task<IActionResult> GetAllByCategoryAsync([FromBody] string categoryName)
+        public async Task<IActionResult> GetAllByCategoryAsync(string categoryName)
         {
             var result = await _productService.GetAllByCategoryAsync(categoryName);
             return SendResponse(result);

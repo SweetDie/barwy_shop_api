@@ -1,12 +1,12 @@
 ﻿using DAL.Repositories.Classes;
-using Infrastructure;
 using Infrastructure.Models.Category;
+using Infrastructure.Services;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BarwyShopAPI.Controllers ;
+namespace BarwyShopAPI.Controllers;
 
-    [Route("api/[controller]")]
+[Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {

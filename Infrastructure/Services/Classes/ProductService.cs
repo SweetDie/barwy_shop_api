@@ -47,7 +47,6 @@ namespace Infrastructure.Services.Classes
 
             var resultCreate = await _productRepository.CreateAsync(newProduct);
 
-
             if(!resultCreate)
              {
                  return new ServiceResponse
@@ -57,17 +56,26 @@ namespace Infrastructure.Services.Classes
                  };
              }
 
-            //var resultAddCategory = await _productRepository.AddToCategoryAsync(newProduct, model.Categories);
+            bool resultAddCategory = true;
 
-            //if (!resultAddCategory)
-            //{
-            //    return new ServiceResponse
-            //    {
-            //        IsSuccess = false,
-            //        Message = "Помилка при створенні товару"
-            //    };
-            //}
-            
+            if (model.Categories.Count() > 0)
+            {
+                resultAddCategory = await _productRepository.AddToCategoryAsync(newProduct, model.Categories);
+            }
+            else
+            {
+                resultAddCategory = await _productRepository.AddToCategoryAsync(newProduct, "Uncategorized");
+            }
+
+            if (!resultAddCategory)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "Помилка при створенні товару"
+                };
+            }
+
             return new ServiceResponse
             {
                 IsSuccess = true,

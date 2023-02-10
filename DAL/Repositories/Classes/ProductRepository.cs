@@ -38,15 +38,19 @@ namespace DAL.Repositories.Classes
         
         public async Task<bool> AddToCategoryAsync(Product product, IEnumerable<string> categories)
         {
-            foreach (var category in categories)
+            if(categories.Count() > 0)
             {
-                var result = await AddToCategoryAsync(product: product, categoryName: category);
-                if (!result)
+                foreach (var category in categories)
                 {
-                    return false;
+                    var result = await AddToCategoryAsync(product: product, categoryName: category);
+                    if (!result)
+                    {
+                        return false;
+                    }
                 }
+                return true;
             }
-            return true;
+            return false;
         }
     }
 }

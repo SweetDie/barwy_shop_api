@@ -24,7 +24,7 @@ namespace BarwyShopAPI
                     {
                         Name = Roles.Admin
                     });
-                        
+
                     await roleManager.CreateAsync(new RoleEntity
                     {
                         Name = Roles.User
@@ -70,6 +70,14 @@ namespace BarwyShopAPI
                     {
                         Name = "Пейзажі",
                         NormalizedName = "Пейзажі".ToUpper(),
+                        DateCreated = DateTime.Now.ToUniversalTime()
+                    };
+                    await categoryRepository.CreateAsync(category);
+
+                    category = new Category
+                    {
+                        Name = "Uncategorized",
+                        NormalizedName = "Uncategorized".ToUpper(),
                         DateCreated = DateTime.Now.ToUniversalTime()
                     };
                     await categoryRepository.CreateAsync(category);
