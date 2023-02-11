@@ -37,15 +37,8 @@ namespace BarwyShopAPI.Controllers;
             var result = await _categoryService.DeleteAsync(Guid.Parse(id));
             return SendResponse(result);
         }
-        
-        [HttpPost("restore")]
-        public async Task<IActionResult> RestoreAsync([FromBody] string id)
-        {
-            var result = await _categoryService.RestoreAsync(Guid.Parse(id));
-            return SendResponse(result);
-        }
 
-        [HttpGet("getAll")]
+    [HttpGet("getAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await _categoryService.GetAllAsync();

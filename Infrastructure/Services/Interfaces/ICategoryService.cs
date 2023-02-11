@@ -8,7 +8,6 @@ namespace Infrastructure.Services.Interfaces
         Task<ServiceResponse> CreateAsync(CategoryCreateVm model);
         Task<ServiceResponse> GetAllAsync();
         Task<ServiceResponse> DeleteAsync(Guid id);
-        Task<ServiceResponse> RestoreAsync(Guid id);
         Task<ServiceResponse> UpdateAsync(CategoryUpdateVm model);
     }
 }

@@ -91,24 +91,6 @@ namespace Infrastructure.Services.Classes
             };
         }
 
-        public async Task<ServiceResponse> RestoreAsync(Guid id)
-        {
-            var result = await _categoryRepository.RestoreAsync(id);
-            if(!result)
-            {
-                return new ServiceResponse
-                {
-                    IsSuccess = false,
-                    Message = "Не вдалося відновити"
-                };
-            }
-            return new ServiceResponse
-            {
-                IsSuccess = true,
-                Message = "Категорію відновлено"
-            };
-        }
-
         public async Task<ServiceResponse> UpdateAsync(CategoryUpdateVm model)
         {
             var validator = new CategoryUpdateValidation();

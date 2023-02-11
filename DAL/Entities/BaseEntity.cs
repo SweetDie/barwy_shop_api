@@ -5,7 +5,6 @@ namespace DAL.Entities
     public interface IEntity<T>
     {
         T Id { get; set; }
-        bool IsDelete { get; set; }
         DateTime DateCreated { get; set; }
         DateTime DateModified { get; set; }
     }
@@ -14,7 +13,6 @@ namespace DAL.Entities
     {
         [Key]
         public T Id { get; set; }
-        public bool IsDelete { get; set; } = false;
         public DateTime DateCreated { get; set; } = DateTime.Now.ToUniversalTime();
         public DateTime DateModified { get; set; } = DateTime.Now.ToUniversalTime();
     }

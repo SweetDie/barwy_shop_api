@@ -15,7 +15,7 @@ namespace DAL.Entities
         public string Size { get; set; }
         
         public Guid ImageId { get; set; }
-        public ProductImage Image { get; set; }
+        public ProductImageEntity Image { get; set; }
         public ICollection<CategoryProduct> CategoryProduct { get; set; }
     }
 }

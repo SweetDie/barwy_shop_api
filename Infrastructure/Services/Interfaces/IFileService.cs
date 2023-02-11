@@ -5,6 +5,9 @@ namespace Infrastructure.Services.Interfaces
 {
     public interface IFileService
     {
-        Task<BaseImage> UploadImageAsync(IFormFile image, string innerFolder = "");
+        Task<TFileEntity> UploadImageAsync<TFileEntity>(IFormFile file, string innerFolders = "")
+            where TFileEntity : BaseFileEntity, new();
+        Task<BaseFileEntity> UploadImageAsync(IFormFile file, string innerFolders = "");
+        bool DeleteFile(string path);
     }
 }

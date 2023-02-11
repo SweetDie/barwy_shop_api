@@ -14,7 +14,7 @@ namespace DAL.Repositories.Classes
             _dbContext = dbContext;
         }
 
-        public IQueryable<Category> Categories => GetAll().Where(c => c.IsDelete == false).Include(c => c.CategoryProduct);
+        public IQueryable<Category> Categories => GetAll().Include(c => c.CategoryProduct);
 
         public async Task CreateCategoryAsync(Category category)
         {

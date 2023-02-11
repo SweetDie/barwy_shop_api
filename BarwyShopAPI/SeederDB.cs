@@ -34,13 +34,19 @@ namespace BarwyShopAPI
 
                 if (!userManager.Users.Any())
                 {
-                    const string adminEmail = "admin@gmail.com";    
+                    const string adminEmail = "admin@gmail.com";
                     var admin = new UserEntity
                     {                         
                         Email = adminEmail,   
                         UserName = adminEmail,
                         FirstName = "Admin",  
                         LastName = "Admin",
+                        Image = new UserImageEntity
+                        {
+                            FileName = ImagesConstants.UserDefaultImage,
+                            Path = ImagesConstants.ImagesFolder,
+                            FullName = Path.Combine(ImagesConstants.ImagesFolder, ImagesConstants.UserDefaultImage)
+                        }
                         
                     };
                     await userManager.CreateAsync(admin, "123456");
@@ -52,7 +58,13 @@ namespace BarwyShopAPI
                         Email = userEmail,
                         UserName = userEmail,
                         FirstName = "User",
-                        LastName = "User"
+                        LastName = "User",
+                        Image = new UserImageEntity
+                        {
+                            FileName = ImagesConstants.UserDefaultImage,
+                            Path = ImagesConstants.ImagesFolder,
+                            FullName = Path.Combine(ImagesConstants.ImagesFolder, ImagesConstants.UserDefaultImage)
+                        }
                     };
                     await userManager.CreateAsync(user, "123456");
                     await userManager.AddToRoleAsync(user, Roles.User);
@@ -91,7 +103,7 @@ namespace BarwyShopAPI
                         Price = 245,
                         Size = "40x50",
                         Article = "0049Т1",
-                        Image = new ProductImage
+                        Image = new ProductImageEntity
                         {
                             FileName = "5jghk0xy.iff.jpg",
                             Path = productImagePath,
@@ -107,7 +119,7 @@ namespace BarwyShopAPI
                         Price = 245,
                         Size = "40x50",
                         Article = "0070П1",
-                        Image = new ProductImage
+                        Image = new ProductImageEntity
                         {
                             FileName = "j2iosauv.nv4.jpg",
                             Path = productImagePath,

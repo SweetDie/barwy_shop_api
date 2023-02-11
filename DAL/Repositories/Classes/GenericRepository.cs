@@ -22,11 +22,13 @@ namespace DAL.Repositories.Classes
 
         public async Task<bool> DeleteAsync(T id)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await _dbContext.Set<TEntity>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id.Equals(id));
             if (entity == null) return false;
-            entity.IsDelete = true;
-            var result = await UpdateAsync(entity);
-            return result;
+            var res = _dbContext.Remove(entity);
+            var result = await _dbContext.SaveChangesAsync();
+            return result != 0;
         }
 
         public IQueryable<TEntity> GetAll()
@@ -39,15 +41,6 @@ namespace DAL.Repositories.Classes
             return await _dbContext.Set<TEntity>()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id.Equals(id));
-        }
-
-        public async Task<bool> RestoreAsync(T id)
-        {
-            var entity = await GetByIdAsync(id);
-            if (entity == null) return false;
-            entity.IsDelete = false;
-            var result = await UpdateAsync(entity);
-            return result;
         }
 
         public async Task<bool> UpdateAsync(TEntity entity)

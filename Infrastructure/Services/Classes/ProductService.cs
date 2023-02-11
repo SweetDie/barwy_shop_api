@@ -47,7 +47,7 @@ namespace Infrastructure.Services.Classes
             {
                 const string fileName = ImagesConstants.ProductDefaultImage;
                 var path = Path.Combine(ImagesConstants.ImagesFolder, ImagesConstants.ProductImageFolder);
-                newProduct.Image = new ProductImage
+                newProduct.Image = new ProductImageEntity
                 {
                     FileName = fileName,
                     Path = path,
@@ -56,7 +56,7 @@ namespace Infrastructure.Services.Classes
             }
             else
             {
-                newProduct.Image = (ProductImage)await _fileService.UploadImageAsync(model.Image, ImagesConstants.ProductImageFolder);
+                newProduct.Image = await _fileService.UploadImageAsync<ProductImageEntity>(model.Image, ImagesConstants.ProductImageFolder);
             }
 
             var resultCreate = await _productRepository.CreateAsync(newProduct);
@@ -109,26 +109,11 @@ namespace Infrastructure.Services.Classes
             };
         }
 
-        public async Task<ServiceResponse> RestoreAsync(Guid id)
-        {
-            var result = await _productRepository.RestoreAsync(id);
-            if(!result)
-            {
-                return new ServiceResponse
-                {
-                    IsSuccess = false,
-                    Message = "Не вдалося відновити"
-                };
-            }
-            return new ServiceResponse
-            {
-                IsSuccess = true,
-                Message = "Товар відновлено"
-            };
-        }
-
         public async Task<ServiceResponse> DeleteAsync(Guid id)
         {
+            var product = await _productRepository.Products.FirstOrDefaultAsync(p => p.Id == id);
+            _fileService.DeleteFile(product.Image.FullName);
+
             var result = await _productRepository.DeleteAsync(id);
             if (!result)
             {

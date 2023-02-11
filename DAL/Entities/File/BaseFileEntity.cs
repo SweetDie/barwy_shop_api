@@ -2,7 +2,7 @@
 
 namespace DAL.Entities.Image;
 
-    public abstract class BaseImage : BaseEntity<Guid>
+    public class BaseFileEntity : BaseEntity<Guid>
     {
         [Required, MaxLength(50)]
         public string FileName { get; set; }

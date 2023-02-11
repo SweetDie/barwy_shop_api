@@ -20,7 +20,8 @@ namespace DAL
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryProduct> CategoryProduct { get; set; }
-        public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<ProductImageEntity> ProductImages { get; set; }
+        public DbSet<UserImageEntity> UserImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -36,6 +37,11 @@ namespace DAL
                 .HasOne(ur => ur.User)
                 .WithMany(u => u.UserRoles)
                 .HasForeignKey(ur => ur.UserId);
+            
+            builder.Entity<UserEntity>()
+                .HasOne(u => u.Image)
+                .WithOne(i => i.User)
+                .HasForeignKey<UserEntity>(u => u.ImageId);
 
             builder.Entity<CategoryProduct>()
                 .HasKey(cp => new { cp.CategoryId, cp.ProductId });

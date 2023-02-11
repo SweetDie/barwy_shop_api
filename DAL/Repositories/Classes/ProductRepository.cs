@@ -15,10 +15,9 @@ namespace DAL.Repositories.Classes
         }
 
         public IQueryable<Product> Products => GetAll()
-            .Where(p => p.IsDelete == false)
             .Include(p => p.CategoryProduct)
-            .ThenInclude(cp => cp.Category);
-            //.Include(p => p.Image);
+            .ThenInclude(cp => cp.Category)
+            .Include(p => p.Image);
 
         public async Task<bool> AddToCategoryAsync(Product product, string categoryName)
         {

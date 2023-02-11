@@ -37,13 +37,6 @@ namespace BarwyShopAPI.Controllers
             return SendResponse(result);
         }
 
-        [HttpPost("restore")]
-        public async Task<IActionResult> RestoreAsync([FromBody] string id)
-        {
-            var result = await _productService.RestoreAsync(Guid.Parse(id));
-            return SendResponse(result);
-        }
-        
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAllAsync()
         {
